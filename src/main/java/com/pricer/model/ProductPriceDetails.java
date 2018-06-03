@@ -10,11 +10,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Table(name = "PRICE_DETAILS_LOG")
@@ -28,7 +29,7 @@ public class ProductPriceDetails implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DETAILS_ID_GENERATOR")
-	@SequenceGenerator(name = "DETAILS_ID_GENERATOR", sequenceName = "SEQ_PRICE_DETAILS_LOG")
+	@SequenceGenerator(name = "DETAILS_ID_GENERATOR", sequenceName = "SEQ_PRICE_DETAILS_LOG", allocationSize = 1)
 	@Column(name = "DETAILS_ID")
 	private Integer id;
 	
@@ -55,6 +56,7 @@ public class ProductPriceDetails implements Serializable {
 	
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED_DATE")
+    @CreatedDate
     private Date createdDate;
 
 	public Integer getId() {

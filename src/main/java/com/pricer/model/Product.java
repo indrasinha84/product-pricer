@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,8 +18,19 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 @Entity
 @Table(name = "PRODUCT")
+@JsonIgnoreProperties(value = {"storePrice", "priceDetails", "latestDetails"}, 
+allowGetters = false)
+@JsonPropertyOrder({"name", "description", "basePrice", "created", "identifier"})
+@EntityListeners(AuditingEntityListener.class)
 public class Product implements Serializable {
 
 	/**
@@ -28,21 +40,27 @@ public class Product implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PRODUCT_ID_GENERATOR")
-	@SequenceGenerator(name = "PRODUCT_ID_GENERATOR", sequenceName = "SEQ_PRODUCT")
+	@SequenceGenerator(name = "PRODUCT_ID_GENERATOR", sequenceName = "SEQ_PRODUCT", allocationSize = 1)
 	@Column(name = "PRODUCT_ID")
+	@JsonProperty("identifier")
 	private Integer id;
 
+	@JsonProperty("name")
 	@Column(name = "PRODUCT_NAME", length = 100, nullable = false)
 	private String name;
 
+	@JsonProperty("description")
 	@Column(name = "PRODUCT_DESCRIPTION", length = 1000)
-	private String descrption;
+	private String description;
 
+	@JsonProperty("basePrice")
 	@Column(name = "BASE_PRICE")
 	private Double basePrice;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATED_DATE")
+	@CreatedDate
+	@JsonProperty("created")
 	private Date createdDate;
 
 	@OneToMany(mappedBy = "product")
@@ -71,12 +89,12 @@ public class Product implements Serializable {
 		this.name = name;
 	}
 
-	public String getDescrption() {
-		return descrption;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDescrption(String descrption) {
-		this.descrption = descrption;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Double getBasePrice() {

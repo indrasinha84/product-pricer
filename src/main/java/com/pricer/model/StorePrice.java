@@ -17,6 +17,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.data.annotation.CreatedDate;
+
 @Entity
 @Table(name = "STORE_PRICE")
 public class StorePrice implements Serializable {
@@ -28,7 +30,7 @@ public class StorePrice implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STORE_PRICE_ID_GENERATOR")
-	@SequenceGenerator(name = "STORE_PRICE_ID_GENERATOR", sequenceName = "SEQ_STORE_PRICE")
+	@SequenceGenerator(name = "STORE_PRICE_ID_GENERATOR", sequenceName = "SEQ_STORE_PRICE", allocationSize = 1)
 	@Column(name = "STORE_PRICE_ID")
 	private Integer id;
 
@@ -56,6 +58,7 @@ public class StorePrice implements Serializable {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "CREATED_DATE")
+	@CreatedDate
 	private Date createdDate;
 
 	public Integer getId() {

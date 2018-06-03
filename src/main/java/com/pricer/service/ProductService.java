@@ -1,11 +1,12 @@
 package com.pricer.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.pricer.model.Product;
+import com.pricer.model.RESTMessage;
+import com.pricer.model.RESTResponse;
 import com.pricer.repository.ProductRepository;
 
 @Service
@@ -13,10 +14,15 @@ public class ProductService {
 
 	@Autowired
 	ProductRepository productRepository;
-	
-	public void getProducts() {
- 		List<Product> prodLost = productRepository.findAll();
-		System.out.println(prodLost.size());
+
+	// private static Logger LOGGER =
+	// LoggerFactory.getLogger(ProductService.class);
+
+	public RESTResponse<Product> addProduct(Product product) {
+		Product createdProduct = productRepository.save(product);
+		RESTResponse<Product> response = new RESTResponse<>(HttpStatus.OK, 
+				RESTMessage.OK, createdProduct);
+		return response;
 	}
-	
+
 }
