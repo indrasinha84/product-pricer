@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,9 +17,17 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Entity
 @Table(name = "STORE")
+@JsonIgnoreProperties(value = {"storePrice"})
+@JsonPropertyOrder({"name", "description", "created", "identifier"})
+@EntityListeners(AuditingEntityListener.class)
 public class Store implements Serializable {
 
 	/**
@@ -26,26 +35,17 @@ public class Store implements Serializable {
 	 */
 	private static final long serialVersionUID = -3978844178062782422L;
 
+	private Integer id; 
+	private String name;
+	private String descrption;
+	private Date createdDate;
+    private Set<StorePrice> storePrice;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STORE_ID_GENERATOR")
 	@SequenceGenerator(name = "STORE_ID_GENERATOR", sequenceName = "SEQ_STORE", allocationSize = 1)
+	@JsonProperty("identifier")
 	@Column(name = "STORE_ID")
-	private Integer id;
-
-	@Column(name = "STORE_NAME", length = 100, nullable = false)
-	private String name;
-
-	@Column(name = "STORE_DESCRIPTION", length = 1000)
-	private String descrption;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATED_DATE")
-	@CreatedDate
-	private Date createdDate;
-
-	@OneToMany(mappedBy="store")
-    private Set<StorePrice> storePrice;
-
 	public Integer getId() {
 		return id;
 	}
@@ -53,7 +53,9 @@ public class Store implements Serializable {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
+	
+	@JsonProperty("name")
+	@Column(name = "STORE_NAME", length = 100, nullable = false) 
 	public String getName() {
 		return name;
 	}
@@ -62,6 +64,8 @@ public class Store implements Serializable {
 		this.name = name;
 	}
 
+	@JsonProperty("descrption")
+	@Column(name = "STORE_DESCRIPTION", length = 1000)
 	public String getDescrption() {
 		return descrption;
 	}
@@ -70,6 +74,10 @@ public class Store implements Serializable {
 		this.descrption = descrption;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@CreatedDate
+	@JsonProperty("created")
+	@Column(name = "CREATED_DATE")
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -78,6 +86,7 @@ public class Store implements Serializable {
 		this.createdDate = createdDate;
 	}
 
+	@OneToMany(mappedBy="store")
 	public Set<StorePrice> getStorePrice() {
 		return storePrice;
 	}

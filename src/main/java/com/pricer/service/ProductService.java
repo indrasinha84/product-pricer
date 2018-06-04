@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 
 import com.pricer.entity.Product;
 import com.pricer.entity.RESTMessage;
-import com.pricer.model.rest.RESTResponse;
 import com.pricer.repository.ProductRepository;
+import com.pricer.rest.dto.ProductRequestDTO;
+import com.pricer.rest.dto.ProductResponseDTO;
+import com.pricer.rest.dto.RESTResponse;
 
 @Service
 public class ProductService {
@@ -15,10 +17,12 @@ public class ProductService {
 	@Autowired
 	ProductRepository productRepository;
 
-	public RESTResponse<Product> addProduct(Product product) {
-		Product createdProduct = productRepository.save(product);
-		RESTResponse<Product> response = new RESTResponse<>(HttpStatus.OK, 
-				RESTMessage.OK, createdProduct);
+	public RESTResponse<ProductResponseDTO> addProduct(ProductRequestDTO product) {
+		Product createdProduct = productRepository.save(product.toEntity());
+		ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+		productResponseDTO.buildResponse(createdProduct);
+		RESTResponse<ProductResponseDTO> response = new RESTResponse<>(HttpStatus.OK, 
+				RESTMessage.OK, productResponseDTO);
 		return response;
 	}
 

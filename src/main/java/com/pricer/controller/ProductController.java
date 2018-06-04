@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pricer.entity.Product;
-import com.pricer.model.rest.RESTResponse;
+import com.pricer.rest.dto.ProductRequestDTO;
+import com.pricer.rest.dto.ProductResponseDTO;
+import com.pricer.rest.dto.RESTResponse;
 import com.pricer.service.ProductService;
 
 @RestController
@@ -22,8 +24,8 @@ public class ProductController {
 
 	@PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, 
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public RESTResponse<Product> addProduct(@Valid @RequestBody Product product) {
-		RESTResponse<Product> result = productService.addProduct(product);
+	public RESTResponse<ProductResponseDTO> addProduct(@Valid @RequestBody ProductRequestDTO product) {
+		RESTResponse<ProductResponseDTO> result = productService.addProduct(product);
 		return result;
 	}
 

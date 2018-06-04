@@ -1,4 +1,4 @@
-package com.pricer.model.rest;
+package com.pricer.rest.dto;
 
 import java.io.Serializable;
 
@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.pricer.entity.RESTMessage;
 
 @JsonPropertyOrder({"status", "message", "payload"})
-public class RESTResponse<T> implements Serializable{
+public class RESTResponse<T extends IRESTResponse<?>> implements Serializable{
 	
 	public RESTResponse(HttpStatus status, RESTMessage message, T payload) {
 		super();

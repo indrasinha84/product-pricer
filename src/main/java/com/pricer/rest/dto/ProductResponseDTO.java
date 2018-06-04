@@ -1,4 +1,4 @@
-package com.pricer.entity;
+package com.pricer.rest.dto;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -21,13 +21,14 @@ import javax.persistence.TemporalType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-@Entity
-@Table(name = "PRODUCT")
-@EntityListeners(AuditingEntityListener.class)
-public class Product implements Serializable {
-	
-	public Product() {	}
-	
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.pricer.entity.Product;
+
+@JsonPropertyOrder({"name", "description", "basePrice", "created", "identifier"})
+public class ProductResponseDTO implements Serializable, IRESTResponse<Product> {
+
 	/**
 	 * 
 	 */
@@ -39,15 +40,8 @@ public class Product implements Serializable {
 	private String description;
 	private Double basePrice;
 	private Date createdDate;
-	private Set<StorePrice> storePrice;
-	private Set<ProductPriceDetails> priceDetails;
-	private ProductPriceDetails latestDetails;
-
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PRODUCT_ID_GENERATOR")
-	@SequenceGenerator(name = "PRODUCT_ID_GENERATOR", sequenceName = "SEQ_PRODUCT", allocationSize = 1)
-	@Column(name = "PRODUCT_ID")
+	@JsonProperty("identifier")
 	public Integer getId() {
 		return id;
 	}
@@ -56,7 +50,7 @@ public class Product implements Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "PRODUCT_NAME", length = 100, nullable = false)
+	@JsonProperty("name")
 	public String getName() {
 		return name;
 	}
@@ -65,7 +59,7 @@ public class Product implements Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "PRODUCT_DESCRIPTION", length = 1000)
+	@JsonProperty("description")
 	public String getDescription() {
 		return description;
 	}
@@ -74,7 +68,7 @@ public class Product implements Serializable {
 		this.description = description;
 	}
 
-	@Column(name = "BASE_PRICE")
+	@JsonProperty("basePrice")
 	public Double getBasePrice() {
 		return basePrice;
 	}
@@ -83,9 +77,7 @@ public class Product implements Serializable {
 		this.basePrice = basePrice;
 	}
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATED_DATE")
-	@CreatedDate
+	@JsonProperty("created")
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -94,31 +86,12 @@ public class Product implements Serializable {
 		this.createdDate = createdDate;
 	}
 
-	@OneToMany(mappedBy = "product")
-	public Set<StorePrice> getStorePrice() {
-		return storePrice;
-	}
-
-	public void setStorePrice(Set<StorePrice> storePrice) {
-		this.storePrice = storePrice;
-	}
-
-	@OneToMany(mappedBy = "product")
-	public Set<ProductPriceDetails> getPriceDetails() {
-		return priceDetails;
-	}
-
-	public void setPriceDetails(Set<ProductPriceDetails> priceDetails) {
-		this.priceDetails = priceDetails;
-	}
-
-	@ManyToOne
-    @JoinColumn(name="LATEST_DETAILS_ID", nullable=true, unique=true)
-	public ProductPriceDetails getLatestDetails() {
-		return latestDetails;
-	}
-
-	public void setLatestDetails(ProductPriceDetails latestDetails) {
-		this.latestDetails = latestDetails;
+	@Override
+	public void buildResponse(Product product) {
+		this.setId(product.getId());
+		this.setName(product.getName());
+		this.setDescription(product.getDescription());
+		this.setBasePrice(product.getBasePrice());
+		this.setCreatedDate(product.getCreatedDate());
 	}
 }
