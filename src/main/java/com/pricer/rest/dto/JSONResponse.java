@@ -8,16 +8,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.pricer.entity.RESTMessage;
 
 @JsonPropertyOrder({"status", "message", "payload"})
-public class RESTResponse<T> implements Serializable{
+public class JSONResponse<T> implements Serializable{
 	
-	public RESTResponse(HttpStatus status, RESTMessage message, T payload) {
+	public JSONResponse(HttpStatus status, RESTMessage message, T payload) {
 		super();
 		this.status = status.value();
 		this.message = message.getMessage();
 		this.payload = payload;
 	}
 	
-	public RESTResponse(HttpStatus status, String message, T payload) {
+	public JSONResponse(HttpStatus status, String message, T payload) {
 		super();
 		this.status = status.value();
 		this.message = message;

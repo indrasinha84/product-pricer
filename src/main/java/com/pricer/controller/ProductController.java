@@ -15,30 +15,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pricer.rest.dto.JSONResponse;
 import com.pricer.rest.dto.ProductRequestDTO;
 import com.pricer.rest.dto.ProductResponseDTO;
-import com.pricer.rest.dto.RESTResponse;
 import com.pricer.rest.exception.ResourceListingException;
 import com.pricer.rest.exception.ResourceModficationException;
 import com.pricer.rest.exception.ResourceNotCreatedException;
 import com.pricer.rest.exception.ResourceNotDeletedException;
 import com.pricer.rest.exception.ResourceNotFoundException;
-import com.pricer.service.NewProductService;
+import com.pricer.service.ProductService;
 
 @RestController
 @RequestMapping("/product")
 public class ProductController {
 
 	@Autowired
-	NewProductService productService;
+	ProductService productService;
 	
 	private static Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public RESTResponse<ProductResponseDTO> addProduct(@RequestBody ProductRequestDTO product) {
-		RESTResponse<ProductResponseDTO> result;
+	public JSONResponse<ProductResponseDTO> addProduct(@RequestBody ProductRequestDTO product) {
+		JSONResponse<ProductResponseDTO> result;
 		try {
-			result = productService.addProduct(product);
+			result = productService.addEntity(product);
 		} catch (RuntimeException e) {
 			LOGGER.error("Creation of product failed. ", e);
 			throw new ResourceNotCreatedException("product");
@@ -48,12 +48,12 @@ public class ProductController {
 	}
 
 	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public RESTResponse<ProductResponseDTO> updateProduct(@PathVariable Integer id,
+	public JSONResponse<ProductResponseDTO> updateProduct(@PathVariable Integer id,
 			@RequestBody ProductRequestDTO product) {
-		RESTResponse<ProductResponseDTO> result;
+		JSONResponse<ProductResponseDTO> result;
 		try {
 
-			result = productService.updateProduct(product, id);
+			result = productService.updateEntity(product, id);
 		} catch (RuntimeException e) {
 			LOGGER.error("Product not modified. ", e);
 			throw new ResourceModficationException("product", "id", id);
@@ -62,13 +62,13 @@ public class ProductController {
 	}
 
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public RESTResponse<ProductResponseDTO> retriveProduct(@PathVariable Integer id) {
-		RESTResponse<ProductResponseDTO> result;
+	public JSONResponse<ProductResponseDTO> retriveProduct(@PathVariable Integer id) {
+		JSONResponse<ProductResponseDTO> result;
 		try {
-			result = productService.retriveProduct(id);
+			result = productService.retriveEntity(id);
 		} catch (ResourceNotFoundException e) {
 			LOGGER.error("Product not found. ", e);
-			throw e;
+			throw new ResourceNotFoundException("Product", "id", id);
 		}
 		catch (RuntimeException e) {
 			LOGGER.error("Product fetch failed for {}. ", id, e);
@@ -78,10 +78,10 @@ public class ProductController {
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public RESTResponse<List<ProductResponseDTO>> listProducts() {
-		RESTResponse<List<ProductResponseDTO>> result;
+	public JSONResponse<List<ProductResponseDTO>> listProducts() {
+		JSONResponse<List<ProductResponseDTO>> result;
 		try {
-		result = productService.listProducts();
+		result = productService.listEntities();
 		}
 		catch (RuntimeException e) {
 			LOGGER.error("Product listing failed. ", e);
@@ -91,8 +91,8 @@ public class ProductController {
 	}
 
 	@DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public RESTResponse<String> deleteProduct(@PathVariable Integer id) {
-		RESTResponse<String> result;
+	public JSONResponse<String> deleteProduct(@PathVariable Integer id) {
+		JSONResponse<String> result;
 		try {
 		result = productService.deleteProduct(id);
 		} catch (ResourceNotFoundException e) {
