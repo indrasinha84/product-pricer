@@ -10,6 +10,11 @@ import com.pricer.entity.RESTMessage;
 @JsonPropertyOrder({"status", "message", "payload"})
 public class JSONResponse<T> implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4827794548581874633L;
+	
 	public JSONResponse(HttpStatus status, RESTMessage message, T payload) {
 		super();
 		this.status = status.value();
@@ -23,11 +28,6 @@ public class JSONResponse<T> implements Serializable{
 		this.message = message;
 		this.payload = payload;
 	}
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4827794548581874633L;
 	
 	Integer status;
 	

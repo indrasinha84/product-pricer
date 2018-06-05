@@ -30,7 +30,6 @@ public abstract class AbstractDataAccessService<E, K, ResponseDTO extends IJSONR
 	}
 
 	public JSONResponse<ResponseDTO> updateEntity(RequestDTO entity, K key) {
-
 		E entityToBeUpdated = entity.toEntity(key);
 		E updatedEntity = repository.save(entityToBeUpdated);
 		ResponseDTO entityResponseDTO = getResonseDTO();
@@ -64,7 +63,7 @@ public abstract class AbstractDataAccessService<E, K, ResponseDTO extends IJSONR
 		return response;
 	}
 
-	public JSONResponse<String> deleteProduct(K key) {
+	public JSONResponse<String> deleteEntity(K key) {
 		Optional<E> entityOptional = repository.findById(key);
 		if (entityOptional.isPresent()) {
 			repository.deleteById(key);

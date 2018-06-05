@@ -2,6 +2,8 @@ package com.pricer.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pricer.rest.dto.JSONResponse;
 import com.pricer.rest.dto.ProductRequestDTO;
 import com.pricer.rest.dto.ProductResponseDTO;
+import com.pricer.rest.exception.IdNotAllowedException;
 import com.pricer.rest.exception.ResourceListingException;
 import com.pricer.rest.exception.ResourceModficationException;
 import com.pricer.rest.exception.ResourceNotCreatedException;
@@ -35,7 +38,7 @@ public class ProductController {
 	private static Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<ProductResponseDTO> addProduct(@RequestBody ProductRequestDTO product) {
+	public JSONResponse<ProductResponseDTO> addProduct(@Valid @RequestBody ProductRequestDTO product) {
 		JSONResponse<ProductResponseDTO> result;
 		try {
 			result = productService.addEntity(product);
@@ -49,11 +52,14 @@ public class ProductController {
 
 	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public JSONResponse<ProductResponseDTO> updateProduct(@PathVariable Integer id,
-			@RequestBody ProductRequestDTO product) {
+			@Valid @RequestBody ProductRequestDTO product) {
 		JSONResponse<ProductResponseDTO> result;
 		try {
 
 			result = productService.updateEntity(product, id);
+		} catch (IdNotAllowedException e) {
+			LOGGER.error("Id not allowed. ", e);
+			throw e;
 		} catch (RuntimeException e) {
 			LOGGER.error("Product not modified. ", e);
 			throw new ResourceModficationException("Product", "id", id);
@@ -61,7 +67,7 @@ public class ProductController {
 		return result;
 	}
 
-	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public JSONResponse<ProductResponseDTO> retriveProduct(@PathVariable Integer id) {
 		JSONResponse<ProductResponseDTO> result;
 		try {
@@ -77,7 +83,7 @@ public class ProductController {
 		return result;
 	}
 
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public JSONResponse<List<ProductResponseDTO>> listProducts() {
 		JSONResponse<List<ProductResponseDTO>> result;
 		try {
@@ -90,11 +96,11 @@ public class ProductController {
 		return result;
 	}
 
-	@DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public JSONResponse<String> deleteProduct(@PathVariable Integer id) {
 		JSONResponse<String> result;
 		try {
-		result = productService.deleteProduct(id);
+		result = productService.deleteEntity(id);
 		} catch (ResourceNotFoundException e) {
 			LOGGER.error("Product not found during deletion. ", e);
 			throw new ResourceNotFoundException("Product", "id", id);

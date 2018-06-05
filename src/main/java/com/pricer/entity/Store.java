@@ -11,24 +11,27 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.id.enhanced.SequenceStyleGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Entity
 @Table(name = "STORE")
-@JsonIgnoreProperties(value = {"storePrice"})
-@JsonPropertyOrder({"name", "description", "created", "identifier"})
 @EntityListeners(AuditingEntityListener.class)
 public class Store implements Serializable {
+	
+	
+	public Store() {
+		
+	}
 
 	/**
 	 * 
@@ -37,13 +40,14 @@ public class Store implements Serializable {
 
 	private Integer id; 
 	private String name;
-	private String descrption;
+	private String description;
 	private Date createdDate;
     private Set<StorePrice> storePrice;
 
-	@Id
+	@Id	
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STORE_ID_GENERATOR")
-	@SequenceGenerator(name = "STORE_ID_GENERATOR", sequenceName = "SEQ_STORE", allocationSize = 1)
+	@GenericGenerator(name = "STORE_ID_GENERATOR", strategy = "com.pricer.entity.id.generator.StoreIdGenerator",
+			parameters = {@Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SEQ_STORE")})
 	@JsonProperty("identifier")
 	@Column(name = "STORE_ID")
 	public Integer getId() {
@@ -64,14 +68,14 @@ public class Store implements Serializable {
 		this.name = name;
 	}
 
-	@JsonProperty("descrption")
+	@JsonProperty("description")
 	@Column(name = "STORE_DESCRIPTION", length = 1000)
-	public String getDescrption() {
-		return descrption;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDescrption(String descrption) {
-		this.descrption = descrption;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

@@ -2,6 +2,8 @@ package com.pricer.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,92 +18,98 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pricer.rest.dto.JSONResponse;
-import com.pricer.rest.dto.ProductRequestDTO;
-import com.pricer.rest.dto.ProductResponseDTO;
+import com.pricer.rest.dto.StoreRequestDTO;
+import com.pricer.rest.dto.StoreResponseDTO;
+import com.pricer.rest.exception.IdNotAllowedException;
 import com.pricer.rest.exception.ResourceListingException;
 import com.pricer.rest.exception.ResourceModficationException;
 import com.pricer.rest.exception.ResourceNotCreatedException;
 import com.pricer.rest.exception.ResourceNotDeletedException;
 import com.pricer.rest.exception.ResourceNotFoundException;
-import com.pricer.service.ProductService;
+import com.pricer.service.StoreService;
 
 @RestController
 @RequestMapping("/store")
 public class StoreController {
 
 	@Autowired
-	ProductService productService;
+	StoreService storeService;
 	
-	private static Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(StoreController.class);
 
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<ProductResponseDTO> addProduct(@RequestBody ProductRequestDTO product) {
-		JSONResponse<ProductResponseDTO> result;
+	public JSONResponse<StoreResponseDTO> addStore(@Valid @RequestBody StoreRequestDTO store) {
+		JSONResponse<StoreResponseDTO> result;
 		try {
-			result = productService.addEntity(product);
+			result = storeService.addEntity(store);
 		} catch (RuntimeException e) {
-			LOGGER.error("Creation of product failed. ", e);
-			throw new ResourceNotCreatedException("product");
+			LOGGER.error("Creation of store failed. ", e);
+			throw new ResourceNotCreatedException("Store");
 		}
 		return result;
 
 	}
 
 	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<ProductResponseDTO> updateProduct(@PathVariable Integer id,
-			@RequestBody ProductRequestDTO product) {
-		JSONResponse<ProductResponseDTO> result;
+	public JSONResponse<StoreResponseDTO> updateStore(@PathVariable Integer id,
+			@Valid @RequestBody StoreRequestDTO store) {
+		JSONResponse<StoreResponseDTO> result;
 		try {
 
-			result = productService.updateEntity(product, id);
-		} catch (RuntimeException e) {
-			LOGGER.error("Product not modified. ", e);
-			throw new ResourceModficationException("product", "id", id);
-		}
-		return result;
-	}
-
-	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<ProductResponseDTO> retriveProduct(@PathVariable Integer id) {
-		JSONResponse<ProductResponseDTO> result;
-		try {
-			result = productService.retriveEntity(id);
-		} catch (ResourceNotFoundException e) {
-			LOGGER.error("Product not found. ", e);
-			throw new ResourceNotFoundException("Product", "id", id);
-		}
-		catch (RuntimeException e) {
-			LOGGER.error("Product fetch failed for {}. ", id, e);
-			throw new ResourceNotFoundException("Product", "id", id);
-		}
-		return result;
-	}
-
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<List<ProductResponseDTO>> listProducts() {
-		JSONResponse<List<ProductResponseDTO>> result;
-		try {
-		result = productService.listEntities();
-		}
-		catch (RuntimeException e) {
-			LOGGER.error("Product listing failed. ", e);
-			throw new ResourceListingException("Product");
-		}
-		return result;
-	}
-
-	@DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<String> deleteProduct(@PathVariable Integer id) {
-		JSONResponse<String> result;
-		try {
-		result = productService.deleteProduct(id);
-		} catch (ResourceNotFoundException e) {
-			LOGGER.error("Product not found during deletion. ", e);
+			result = storeService.updateEntity(store, id);
+		} catch (IdNotAllowedException e) {
+			LOGGER.error("Id not allowed. ", e);
 			throw e;
 		}
+		
 		catch (RuntimeException e) {
-			LOGGER.error("Product deletion failed for {}. ", id, e);
-			throw new ResourceNotDeletedException("Product", "id", id);
+			LOGGER.error("Store not modified. ", e);
+			throw new ResourceModficationException("Store", "id", id);
+		}
+		return result;
+	}
+
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public JSONResponse<StoreResponseDTO> retriveStore(@PathVariable Integer id) {
+		JSONResponse<StoreResponseDTO> result;
+		try {
+			result = storeService.retriveEntity(id);
+		} catch (ResourceNotFoundException e) {
+			LOGGER.error("Store not found. ", e);
+			throw new ResourceNotFoundException("Store", "id", id);
+		}
+		catch (RuntimeException e) {
+			LOGGER.error("Store fetch failed for {}. ", id, e);
+			throw new ResourceNotFoundException("Store", "id", id);
+		}
+		return result;
+	}
+
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public JSONResponse<List<StoreResponseDTO>> listStores() {
+		JSONResponse<List<StoreResponseDTO>> result;
+		try {
+		result = storeService.listEntities();
+		}
+		catch (RuntimeException e) {
+			LOGGER.error("Store listing failed. ", e);
+			throw new ResourceListingException("Store");
+		}
+		return result;
+	}
+
+	@DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public JSONResponse<String> deleteStore(@PathVariable Integer id) {
+		JSONResponse<String> result;
+		try {
+		result = storeService.deleteEntity(id);
+		} catch (ResourceNotFoundException e) {
+			LOGGER.error("Store not found during deletion. ", e);
+			throw new ResourceNotFoundException("Store", "id", id);
+		}
+		catch (RuntimeException e) {
+			LOGGER.error("Store deletion failed for {}. ", id, e);
+			throw new ResourceNotDeletedException("Store", "id", id);
 		}
 		return result;
 	}

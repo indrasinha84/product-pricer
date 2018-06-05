@@ -2,6 +2,10 @@ package com.pricer.rest.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.pricer.entity.Product;
@@ -19,6 +23,7 @@ public class ProductRequestDTO implements Serializable, IJSONRequest<Product, In
 	private Double basePrice;
 
 	@JsonProperty("name")
+	@NotBlank
 	public String getName() {
 		return name;
 	}
@@ -37,6 +42,8 @@ public class ProductRequestDTO implements Serializable, IJSONRequest<Product, In
 	}
 
 	@JsonProperty("basePrice")
+	@PositiveOrZero
+	@NotNull
 	public Double getBasePrice() {
 		return basePrice;
 	}

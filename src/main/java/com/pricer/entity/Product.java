@@ -26,7 +26,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table(name = "PRODUCT")
 @EntityListeners(AuditingEntityListener.class)
-// @MappedSuperclass
 public class Product implements Serializable {
 
 	public Product() {
