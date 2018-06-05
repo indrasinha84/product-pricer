@@ -19,6 +19,8 @@ import javax.persistence.TemporalType;
 
 import org.springframework.data.annotation.CreatedDate;
 
+import com.pricer.entity.sequence.ProductWithSequence;
+
 @Entity
 @Table(name = "STORE_PRICE")
 public class StorePrice implements Serializable {
@@ -41,7 +43,7 @@ public class StorePrice implements Serializable {
 
 	@ManyToOne
     @JoinColumn(name="PRODUCT_ID", nullable=false)
-	private Product product;
+	private ProductWithSequence product;
 	
 	@OneToMany(mappedBy = "lowestPrice")
 	private Set<ProductPriceDetails> lowestPrices;
@@ -77,11 +79,11 @@ public class StorePrice implements Serializable {
 		this.store = store;
 	}
 
-	public Product getProduct() {
+	public ProductWithSequence getProduct() {
 		return product;
 	}
 
-	public void setProduct(Product product) {
+	public void setProduct(ProductWithSequence product) {
 		this.product = product;
 	}
 

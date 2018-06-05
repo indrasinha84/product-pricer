@@ -10,7 +10,7 @@ public class ResourceNotFoundException extends RuntimeException {
 	* 
 	*/
 	private static final long serialVersionUID = -865877778578623805L;
-
+	
 	private String resourceName;
 	private String fieldName;
 	private Object fieldValue;

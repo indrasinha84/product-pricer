@@ -18,20 +18,20 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pricer.rest.dto.ProductRequestDTO;
 import com.pricer.rest.dto.ProductResponseDTO;
 import com.pricer.rest.dto.RESTResponse;
+import com.pricer.rest.exception.ResourceListingException;
 import com.pricer.rest.exception.ResourceModficationException;
 import com.pricer.rest.exception.ResourceNotCreatedException;
 import com.pricer.rest.exception.ResourceNotDeletedException;
 import com.pricer.rest.exception.ResourceNotFoundException;
-import com.pricer.rest.exception.ResourceListingException;
-import com.pricer.service.ProductService;
+import com.pricer.service.NewProductService;
 
 @RestController
 @RequestMapping("/product")
 public class ProductController {
 
 	@Autowired
-	ProductService productService;
-
+	NewProductService productService;
+	
 	private static Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -91,8 +91,8 @@ public class ProductController {
 	}
 
 	@DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public RESTResponse<ProductResponseDTO> deleteProduct(@PathVariable Integer id) {
-		RESTResponse<ProductResponseDTO> result;
+	public RESTResponse<String> deleteProduct(@PathVariable Integer id) {
+		RESTResponse<String> result;
 		try {
 		result = productService.deleteProduct(id);
 		} catch (ResourceNotFoundException e) {

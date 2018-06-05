@@ -1,16 +1,9 @@
 package com.pricer.controller;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pricer.entity.Product;
-import com.pricer.rest.dto.RESTResponse;
 import com.pricer.service.ProductService;
 
 @RestController

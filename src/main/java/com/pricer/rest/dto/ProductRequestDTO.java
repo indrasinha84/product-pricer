@@ -1,14 +1,14 @@
 package com.pricer.rest.dto;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.pricer.entity.Product;
+import com.pricer.entity.sequence.ProductWithSequence;
 
 @JsonPropertyOrder({ "name", "description", "basePrice" })
-public class ProductRequestDTO implements Serializable, IRESTRequest<Product> {
+public class ProductRequestDTO implements Serializable, IJSONRequest<Product, ProductWithSequence, Integer> {
 
 	/**
 	 * 
@@ -46,11 +46,21 @@ public class ProductRequestDTO implements Serializable, IRESTRequest<Product> {
 		this.basePrice = basePrice;
 	}
 
-	public Product toEntity() {
+	public ProductWithSequence toEntityWithSequence() {
+		ProductWithSequence product = new ProductWithSequence();
+		product.setName(this.getName());
+		product.setDescription(this.getDescription());
+		product.setBasePrice(this.getBasePrice());
+		return product;
+	}
+
+	@Override
+	public Product toEntity(Integer id) {
 		Product product = new Product();
 		product.setName(this.getName());
 		product.setDescription(this.getDescription());
 		product.setBasePrice(this.getBasePrice());
+		product.setId(id);
 		return product;
 	}
 }
