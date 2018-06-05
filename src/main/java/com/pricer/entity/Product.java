@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -25,14 +26,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Table(name = "PRODUCT")
 @EntityListeners(AuditingEntityListener.class)
 public class Product implements Serializable {
-	
-	public Product() {	}
-	
+
+	public Product() {
+	}
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3248457103645185693L;
-
 
 	private Integer id;
 	private String name;
@@ -43,11 +44,10 @@ public class Product implements Serializable {
 	private Set<ProductPriceDetails> priceDetails;
 	private ProductPriceDetails latestDetails;
 
-	
 	@Id
+	@Column(name = "PRODUCT_ID")	
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PRODUCT_ID_GENERATOR")
 	@SequenceGenerator(name = "PRODUCT_ID_GENERATOR", sequenceName = "SEQ_PRODUCT", allocationSize = 1)
-	@Column(name = "PRODUCT_ID")
 	public Integer getId() {
 		return id;
 	}
@@ -84,8 +84,8 @@ public class Product implements Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATED_DATE")
 	@CreatedDate
+	@Column(name = "CREATED_DATE", nullable = false, updatable = false)
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -113,7 +113,7 @@ public class Product implements Serializable {
 	}
 
 	@ManyToOne
-    @JoinColumn(name="LATEST_DETAILS_ID", nullable=true, unique=true)
+	@JoinColumn(name = "LATEST_DETAILS_ID", nullable = true, unique = true)
 	public ProductPriceDetails getLatestDetails() {
 		return latestDetails;
 	}
