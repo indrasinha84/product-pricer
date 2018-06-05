@@ -6,10 +6,9 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.pricer.entity.Product;
-import com.pricer.entity.sequence.ProductWithSequence;
 
 @JsonPropertyOrder({"name", "description", "basePrice", "created", "identifier"})
-public class ProductResponseDTO implements Serializable, IJSONResponse<Product, ProductWithSequence> {
+public class ProductResponseDTO implements Serializable, IJSONResponse<Product> {
 
 	/**
 	 * 
@@ -66,16 +65,6 @@ public class ProductResponseDTO implements Serializable, IJSONResponse<Product, 
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
-
-	@Override
-	public void buildResponseUsingSequence(ProductWithSequence product) {
-		this.setId(product.getId());
-		this.setName(product.getName());
-		this.setDescription(product.getDescription());
-		this.setBasePrice(product.getBasePrice());
-		this.setCreatedDate(product.getCreatedDate());
-	}
-	
 	
 	@Override
 	public void buildResponse(Product product) {
@@ -86,6 +75,6 @@ public class ProductResponseDTO implements Serializable, IJSONResponse<Product, 
 		this.setCreatedDate(product.getCreatedDate());
 	}
 	
-	public static IJSONResponse<?, ?> createDTO(){return new ProductResponseDTO() ;};
+//	public static ProductResponseDTO createDTO(){return new ProductResponseDTO() ;};
 
 }

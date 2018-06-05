@@ -1,10 +1,8 @@
 package com.pricer.rest.dto;
 
-public interface IJSONResponse<E, S> {
+public interface IJSONResponse<E> {
 
-	void buildResponseUsingSequence(S product);
-
-	void buildResponse(E product);
+	void buildResponse(E entity);
 	
 
 }

@@ -1,8 +1,7 @@
 package com.pricer.rest.dto;
 
-public interface IJSONRequest<E, S, K> {
+public interface IJSONRequest<E, K> {
 	
-	public S toEntityWithSequence();
 	
 	public E toEntity(K key);
 

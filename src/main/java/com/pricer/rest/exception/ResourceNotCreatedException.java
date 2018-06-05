@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ResourceNotCreatedException extends RuntimeException {
 
 	/**
-	* 
-	*/
-	private static final long serialVersionUID = -865877778578623805L;
-
+	 * 
+	 */
+	private static final long serialVersionUID = 6647753391161635915L;
+	
 	private String resourceName;
 
 	public ResourceNotCreatedException(String resourceName) {

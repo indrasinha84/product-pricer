@@ -41,7 +41,7 @@ public class ProductController {
 			result = productService.addEntity(product);
 		} catch (RuntimeException e) {
 			LOGGER.error("Creation of product failed. ", e);
-			throw new ResourceNotCreatedException("product");
+			throw new ResourceNotCreatedException("Product");
 		}
 		return result;
 
@@ -56,7 +56,7 @@ public class ProductController {
 			result = productService.updateEntity(product, id);
 		} catch (RuntimeException e) {
 			LOGGER.error("Product not modified. ", e);
-			throw new ResourceModficationException("product", "id", id);
+			throw new ResourceModficationException("Product", "id", id);
 		}
 		return result;
 	}
@@ -97,7 +97,7 @@ public class ProductController {
 		result = productService.deleteProduct(id);
 		} catch (ResourceNotFoundException e) {
 			LOGGER.error("Product not found during deletion. ", e);
-			throw e;
+			throw new ResourceNotFoundException("Product", "id", id);
 		}
 		catch (RuntimeException e) {
 			LOGGER.error("Product deletion failed for {}. ", id, e);

@@ -5,10 +5,9 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.pricer.entity.Product;
-import com.pricer.entity.sequence.ProductWithSequence;
 
 @JsonPropertyOrder({ "name", "description", "basePrice" })
-public class ProductRequestDTO implements Serializable, IJSONRequest<Product, ProductWithSequence, Integer> {
+public class ProductRequestDTO implements Serializable, IJSONRequest<Product, Integer> {
 
 	/**
 	 * 
@@ -44,14 +43,6 @@ public class ProductRequestDTO implements Serializable, IJSONRequest<Product, Pr
 
 	public void setBasePrice(Double basePrice) {
 		this.basePrice = basePrice;
-	}
-
-	public ProductWithSequence toEntityWithSequence() {
-		ProductWithSequence product = new ProductWithSequence();
-		product.setName(this.getName());
-		product.setDescription(this.getDescription());
-		product.setBasePrice(this.getBasePrice());
-		return product;
 	}
 
 	@Override

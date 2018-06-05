@@ -6,11 +6,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.NOT_MODIFIED)
 public class ResourceModficationException extends RuntimeException {
 
-	/**
-	* 
-	*/
-	private static final long serialVersionUID = -865877778578623805L;
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -833370690313508761L;
+	
 	private String resourceName;
 	private String fieldName;
 	private Object fieldValue;
