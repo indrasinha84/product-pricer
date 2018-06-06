@@ -34,7 +34,8 @@ CREATE TABLE store_price
      store_id       INTEGER, 
      product_id     INTEGER, 
      product_notes  VARCHAR(1000), 
-     store_price    NUMERIC, 
+     store_price    NUMERIC,
+     eff_sts		VARCHAR(1),
      created_date   TIMESTAMP, 
      FOREIGN KEY (store_id) REFERENCES store(store_id), 
      FOREIGN KEY (product_id) REFERENCES product(product_id) 
@@ -44,6 +45,9 @@ CREATE SEQUENCE seq_store_price START WITH 1 INCREMENT BY 1;
 
 CREATE UNIQUE INDEX ind1_store_price 
   ON store_price (store_price_id); 
+  
+CREATE INDEX ind2_store_price 
+  ON store_price (store_id, product_id, eff_sts);  
 
 CREATE TABLE price_details_log 
   ( 

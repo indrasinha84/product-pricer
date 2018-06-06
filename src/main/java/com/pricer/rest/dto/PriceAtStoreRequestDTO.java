@@ -1,8 +1,12 @@
 package com.pricer.rest.dto;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
+
+import org.springframework.data.domain.Example;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -10,7 +14,7 @@ import com.pricer.entity.PriceAtStore;
 import com.pricer.entity.Product;
 import com.pricer.entity.Store;
 
-@JsonPropertyOrder({ "store", "product", "price","notes"})
+@JsonPropertyOrder({ "store", "product", "price", "notes" })
 public class PriceAtStoreRequestDTO implements Serializable, IJSONRequest<PriceAtStore, Integer> {
 
 	/**
@@ -22,7 +26,7 @@ public class PriceAtStoreRequestDTO implements Serializable, IJSONRequest<PriceA
 	private Integer product;
 	private Double storePrice;
 	private String notes;
-	
+
 	@JsonProperty("store")
 	@NotNull
 	public Integer getStore() {
@@ -62,14 +66,17 @@ public class PriceAtStoreRequestDTO implements Serializable, IJSONRequest<PriceA
 	public void setNotes(String notes) {
 		this.notes = notes;
 	}
-	
+
 	@Override
 	public PriceAtStore toEntity(Integer id) {
 		Store store = new Store();
 		store.setId(this.getStore());
 		Product product = new Product();
 		product.setId(this.getProduct());
+		Set<PriceAtStore> storePrices = new HashSet<>();
 		PriceAtStore entity = new PriceAtStore();
+		storePrices.add(entity);
+		product.setStorePrice(storePrices );
 		entity.setId(id);
 		entity.setStore(store);
 		entity.setProduct(product);
@@ -77,4 +84,17 @@ public class PriceAtStoreRequestDTO implements Serializable, IJSONRequest<PriceA
 		entity.setNotes(this.getNotes());
 		return entity;
 	}
+
+	@Override
+	public Example<PriceAtStore> buildExampleUsingNaturalKey() {
+		Store store = new Store();
+		store.setId(this.getStore());
+		Product product = new Product();
+		product.setId(this.getProduct());
+		PriceAtStore entity = new PriceAtStore();
+		entity.setStore(store);
+		entity.setProduct(product);
+		return Example.of(entity);
+	}
+
 }

@@ -16,4 +16,14 @@ public class ProductService
 		return new ProductResponseDTO();
 	}
 
+	@Override
+	public void updateEffectiveStatus(Product old, String string) {
+		
+	}
+
+	@Override
+	public ProductRequestDTO getRequestDTO() {
+		return new ProductRequestDTO();
+	}
+
 }

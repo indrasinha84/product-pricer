@@ -15,4 +15,13 @@ public class StoreService
 	public StoreResponseDTO getResonseDTO() {
 		return new StoreResponseDTO();
 	}
+
+	@Override
+	public void updateEffectiveStatus(Store old, String string) {		
+	}
+
+	@Override
+	public StoreRequestDTO getRequestDTO() {
+		return new StoreRequestDTO();
+	}
 }

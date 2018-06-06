@@ -6,7 +6,6 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.pricer.entity.PriceAtStore;
-import com.pricer.entity.Product;
 
 @JsonPropertyOrder({ "store", "product", "price", "created" })
 public class PriceAtStoreResponseDTO implements Serializable, IJSONResponse<PriceAtStore> {
