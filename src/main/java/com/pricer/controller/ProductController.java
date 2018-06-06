@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pricer.rest.dto.JSONResponse;
+import com.pricer.rest.dto.PriceAtStoreRequestDTO;
+import com.pricer.rest.dto.PriceDetailsRequestDTO;
+import com.pricer.rest.dto.PriceDetailsResponseDTO;
 import com.pricer.rest.dto.ProductRequestDTO;
 import com.pricer.rest.dto.ProductResponseDTO;
 import com.pricer.rest.exception.IdNotAllowedException;
@@ -26,6 +29,7 @@ import com.pricer.rest.exception.ResourceModficationException;
 import com.pricer.rest.exception.ResourceNotCreatedException;
 import com.pricer.rest.exception.ResourceNotDeletedException;
 import com.pricer.rest.exception.ResourceNotFoundException;
+import com.pricer.service.PriceDetailsService;
 import com.pricer.service.ProductService;
 
 @RestController
@@ -34,7 +38,10 @@ public class ProductController {
 
 	@Autowired
 	ProductService productService;
-	
+
+	@Autowired
+	PriceDetailsService priceDetailsService;
+
 	private static Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -75,8 +82,7 @@ public class ProductController {
 		} catch (ResourceNotFoundException e) {
 			LOGGER.error("Product not found. ", e);
 			throw new ResourceNotFoundException("Product", "id", id);
-		}
-		catch (RuntimeException e) {
+		} catch (RuntimeException e) {
 			LOGGER.error("Product fetch failed for {}. ", id, e);
 			throw new ResourceNotFoundException("Product", "id", id);
 		}
@@ -87,9 +93,8 @@ public class ProductController {
 	public JSONResponse<List<ProductResponseDTO>> listProducts() {
 		JSONResponse<List<ProductResponseDTO>> result;
 		try {
-		result = productService.listEntities();
-		}
-		catch (RuntimeException e) {
+			result = productService.listEntities();
+		} catch (RuntimeException e) {
 			LOGGER.error("Product listing failed. ", e);
 			throw new ResourceListingException("Product");
 		}
@@ -100,15 +105,34 @@ public class ProductController {
 	public JSONResponse<String> deleteProduct(@PathVariable Integer id) {
 		JSONResponse<String> result;
 		try {
-		result = productService.deleteEntity(id);
+			result = productService.deleteEntity(id);
 		} catch (ResourceNotFoundException e) {
 			LOGGER.error("Product not found during deletion. ", e);
 			throw new ResourceNotFoundException("Product", "id", id);
-		}
-		catch (RuntimeException e) {
+		} catch (RuntimeException e) {
 			LOGGER.error("Product deletion failed for {}. ", id, e);
 			throw new ResourceNotDeletedException("Product", "id", id);
 		}
 		return result;
 	}
+
+	@GetMapping(path = "/{product}/prices", produces = MediaType.APPLICATION_JSON_VALUE)
+	public JSONResponse<PriceDetailsResponseDTO> getPrice(@PathVariable Integer product) {
+		JSONResponse<PriceDetailsResponseDTO> result;
+		try {
+			
+			
+			PriceDetailsRequestDTO request = new PriceDetailsRequestDTO();
+			request.setProduct(product);
+			result = priceDetailsService.findByNaturalKey(request);
+		} catch (ResourceNotFoundException e) {
+			LOGGER.error("Price Details not found. ", e);
+			throw new ResourceNotFoundException("Price Details", "product", product);
+		} catch (RuntimeException e) {
+			LOGGER.error("Price Details fetch failed for {}.", product, e);
+			throw new ResourceNotFoundException("Price Details", "product", product);
+		}
+		return result;
+	}
+
 }

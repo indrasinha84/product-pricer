@@ -67,11 +67,11 @@ public class ProductResponseDTO implements Serializable, IJSONResponse<Product> 
 	}
 	
 	@Override
-	public void buildResponse(Product product) {
-		this.setId(product.getId());
-		this.setName(product.getName());
-		this.setDescription(product.getDescription());
-		this.setBasePrice(product.getBasePrice());
-		this.setCreatedDate(product.getCreatedDate());
+	public void buildResponse(Product entity) {
+		this.setId(entity.getId());
+		this.setName(entity.getName());
+		this.setDescription(entity.getDescription());
+		this.setBasePrice(entity.getBasePrice());
+		this.setCreatedDate(entity.getCreatedDate());
 	}
 }

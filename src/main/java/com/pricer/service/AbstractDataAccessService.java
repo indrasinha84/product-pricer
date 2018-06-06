@@ -34,8 +34,10 @@ public abstract class AbstractDataAccessService<E, K, ResponseDTO extends IJSONR
 	}
 
 	public JSONResponse<ResponseDTO> softAddEntity(RequestDTO requestDTO) {
-		Example<E> example = requestDTO.buildExampleUsingNaturalKey();
- 		updateEffectiveStatus(example.getProbe(), ACTIVE);
+		E entity = requestDTO.buildEntityUsingNaturalKey();
+		updateEffectiveStatus(entity, ACTIVE);
+		Example<E> example = Example.of(entity);
+		updateEffectiveStatus(example.getProbe(), ACTIVE);
 
 		Optional<E> entityOptional = repository.findOne(example);
 		if (entityOptional.isPresent()) {
@@ -75,11 +77,11 @@ public abstract class AbstractDataAccessService<E, K, ResponseDTO extends IJSONR
 			throw new ResourceNotFoundException();
 		}
 	}
-	
-	
+
 	public JSONResponse<ResponseDTO> findByNaturalKey(RequestDTO requestDTO) {
-		Example<E> example = requestDTO.buildExampleUsingNaturalKey();
- 		updateEffectiveStatus(example.getProbe(), ACTIVE);
+		E entity = requestDTO.buildEntityUsingNaturalKey();
+		updateEffectiveStatus(entity, ACTIVE);
+		Example<E> example = Example.of(entity);
 		Optional<E> entityOptional = repository.findOne(example);
 		if (entityOptional.isPresent()) {
 			ResponseDTO entityResponseDTO = getResonseDTO();
@@ -90,7 +92,6 @@ public abstract class AbstractDataAccessService<E, K, ResponseDTO extends IJSONR
 			throw new ResourceNotFoundException();
 		}
 	}
-	
 
 	public JSONResponse<List<ResponseDTO>> listEntities() {
 		List<E> entities = repository.findAll();
@@ -104,11 +105,12 @@ public abstract class AbstractDataAccessService<E, K, ResponseDTO extends IJSONR
 				entityResponseDTOs);
 		return response;
 	}
-	
+
 	public JSONResponse<List<ResponseDTO>> listActiveEntities() {
 		RequestDTO requestDTO = getRequestDTO();
-		Example<E> example = requestDTO.buildExampleUsingNaturalKey();
- 		updateEffectiveStatus(example.getProbe(), ACTIVE);
+		E activeEntity  = requestDTO.buildEntityUsingNaturalKey();
+		updateEffectiveStatus(activeEntity, ACTIVE);
+		Example<E> example = Example.of(activeEntity);
 		List<E> entities = repository.findAll(example);
 		List<ResponseDTO> entityResponseDTOs = new ArrayList<>(entities.size());
 		entities.stream().forEach(entity -> {
@@ -134,11 +136,11 @@ public abstract class AbstractDataAccessService<E, K, ResponseDTO extends IJSONR
 			throw new ResourceNotFoundException();
 		}
 	}
-	
-	
+
 	public JSONResponse<String> deleteEntityByNaturalKey(RequestDTO requestDTO) {
-		Example<E> example = requestDTO.buildExampleUsingNaturalKey();
- 		updateEffectiveStatus(example.getProbe(), ACTIVE);
+		E entity = requestDTO.buildEntityUsingNaturalKey();
+		updateEffectiveStatus(entity, ACTIVE);
+		Example<E> example = Example.of(entity);
 		Optional<E> entityOptional = repository.findOne(example);
 		if (entityOptional.isPresent()) {
 			repository.delete(entityOptional.get());
@@ -146,7 +148,7 @@ public abstract class AbstractDataAccessService<E, K, ResponseDTO extends IJSONR
 			return response;
 		} else {
 			throw new ResourceNotFoundException();
-		} 		
+		}
 	}
 
 }

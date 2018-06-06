@@ -76,7 +76,7 @@ public class PriceAtStoreRequestDTO implements Serializable, IJSONRequest<PriceA
 		Set<PriceAtStore> storePrices = new HashSet<>();
 		PriceAtStore entity = new PriceAtStore();
 		storePrices.add(entity);
-		product.setStorePrice(storePrices );
+		product.setStorePrice(storePrices);
 		entity.setId(id);
 		entity.setStore(store);
 		entity.setProduct(product);
@@ -86,7 +86,7 @@ public class PriceAtStoreRequestDTO implements Serializable, IJSONRequest<PriceA
 	}
 
 	@Override
-	public Example<PriceAtStore> buildExampleUsingNaturalKey() {
+	public PriceAtStore buildEntityUsingNaturalKey() {
 		Store store = new Store();
 		store.setId(this.getStore());
 		Product product = new Product();
@@ -94,7 +94,7 @@ public class PriceAtStoreRequestDTO implements Serializable, IJSONRequest<PriceA
 		PriceAtStore entity = new PriceAtStore();
 		entity.setStore(store);
 		entity.setProduct(product);
-		return Example.of(entity);
+		return entity;
 	}
 
 }

@@ -6,8 +6,7 @@ CREATE TABLE product
      product_name        VARCHAR(100) NOT NULL, 
      product_description VARCHAR(1000), 
      base_price          NUMERIC, 
-     created_date        TIMESTAMP, 
-     latest_details_id   INTEGER 
+     created_date        TIMESTAMP
   ); 
 
 CREATE SEQUENCE seq_product START WITH 1 INCREMENT BY 1; 
@@ -58,6 +57,7 @@ CREATE TABLE price_details_log
      highest_price_id    INTEGER, 
      ideal_store_price   NUMERIC, 
      count_of_prices     INTEGER, 
+     eff_sts			 VARCHAR(1),
      created_date        TIMESTAMP, 
      FOREIGN KEY (lowest_price_id) REFERENCES store_price(store_price_id), 
      FOREIGN KEY (highest_price_id) REFERENCES store_price(store_price_id), 
@@ -69,9 +69,9 @@ CREATE SEQUENCE seq_price_details_log START WITH 1 INCREMENT BY 1;
 CREATE UNIQUE INDEX ind1_price_details_log 
   ON price_details_log (details_id); 
 
-ALTER TABLE product 
-  ADD FOREIGN KEY (latest_details_id) REFERENCES price_details_log(details_id); 
-
+CREATE UNIQUE INDEX ind2_price_details_log 
+  ON price_details_log (product_id, eff_sts); 
+  
 CREATE TABLE price_calculation_request 
   ( 
      calculation_request_id INTEGER UNIQUE, 

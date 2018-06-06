@@ -5,60 +5,46 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.id.enhanced.SequenceStyleGenerator;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "PRICE_DETAILS_LOG")
-public class ProductPriceDetails implements Serializable {
-	
+@EntityListeners(AuditingEntityListener.class)
+public class SchudeledEventLog implements Serializable {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8927107845256199307L;
 
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DETAILS_ID_GENERATOR")
-	@SequenceGenerator(name = "DETAILS_ID_GENERATOR", sequenceName = "SEQ_PRICE_DETAILS_LOG", allocationSize = 1)
-	@Column(name = "DETAILS_ID")
 	private Integer id;
-	
-	@ManyToOne
-    @JoinColumn(name="PRODUCT_ID", nullable=false)
 	private Product product;
-	
-	@Column(name = "AVERAGE_STORE_PRICE")
 	private Double averageStorePrice;
-	
-	@ManyToOne
-    @JoinColumn(name="LOWEST_PRICE_ID", nullable=false)
 	private PriceAtStore lowestPrice;
-	
-	@ManyToOne
-    @JoinColumn(name="HIGHEST_PRICE_ID", nullable=false)
 	private PriceAtStore highestPrice;
-	
-	@Column(name = "IDEAL_STORE_PRICE")
 	private Double idealPrice;
-	
-	@Column(name = "COUNT_OF_PRICES")
 	private Integer countOfPrices;
-	
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "CREATED_DATE")
-    @CreatedDate
-    private Date createdDate;
+	private Date createdDate;
 
+	@Id
+	@Column(name = "DETAILS_ID")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DETAILS_ID_GENERATOR")
+	@GenericGenerator(name = "DETAILS_ID_GENERATOR", strategy = "com.pricer.entity.id.generator.PriceDetailsIdGenerator", parameters = {
+			@Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SEQ_PRICE_DETAILS_LOG") })
 	public Integer getId() {
 		return id;
 	}
@@ -67,6 +53,8 @@ public class ProductPriceDetails implements Serializable {
 		this.id = id;
 	}
 
+	@ManyToOne
+	@JoinColumn(name = "PRODUCT_ID", nullable = false)
 	public Product getProduct() {
 		return product;
 	}
@@ -75,6 +63,7 @@ public class ProductPriceDetails implements Serializable {
 		this.product = product;
 	}
 
+	@Column(name = "AVERAGE_STORE_PRICE")
 	public Double getAverageStorePrice() {
 		return averageStorePrice;
 	}
@@ -83,6 +72,8 @@ public class ProductPriceDetails implements Serializable {
 		this.averageStorePrice = averageStorePrice;
 	}
 
+	@ManyToOne
+	@JoinColumn(name = "LOWEST_PRICE_ID", nullable = false)
 	public PriceAtStore getLowestPrice() {
 		return lowestPrice;
 	}
@@ -91,6 +82,8 @@ public class ProductPriceDetails implements Serializable {
 		this.lowestPrice = lowestPrice;
 	}
 
+	@ManyToOne
+	@JoinColumn(name = "HIGHEST_PRICE_ID", nullable = false)
 	public PriceAtStore getHighestPrice() {
 		return highestPrice;
 	}
@@ -99,6 +92,7 @@ public class ProductPriceDetails implements Serializable {
 		this.highestPrice = highestPrice;
 	}
 
+	@Column(name = "IDEAL_STORE_PRICE")
 	public Double getIdealPrice() {
 		return idealPrice;
 	}
@@ -107,6 +101,7 @@ public class ProductPriceDetails implements Serializable {
 		this.idealPrice = idealPrice;
 	}
 
+	@Column(name = "COUNT_OF_PRICES")
 	public Integer getCountOfPrices() {
 		return countOfPrices;
 	}
@@ -115,12 +110,15 @@ public class ProductPriceDetails implements Serializable {
 		this.countOfPrices = countOfPrices;
 	}
 
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "CREATED_DATE")
+	@CreatedDate
 	public Date getCreatedDate() {
 		return createdDate;
 	}
 
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
-	}	
-	
+	}
+
 }

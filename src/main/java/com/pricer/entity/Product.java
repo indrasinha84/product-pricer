@@ -10,8 +10,6 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -42,8 +40,8 @@ public class Product implements Serializable {
 	private Double basePrice;
 	private Date createdDate;
 	private Set<PriceAtStore> storePrice;
-	private Set<ProductPriceDetails> priceDetails;
-	private ProductPriceDetails latestDetails;
+	private Set<PriceDetails> priceDetails;
+//	private PriceDetails latestDetails;
 
 	@Id
 	@Column(name = "PRODUCT_ID")
@@ -106,21 +104,21 @@ public class Product implements Serializable {
 	}
 
 	@OneToMany(mappedBy = "product")
-	public Set<ProductPriceDetails> getPriceDetails() {
+	public Set<PriceDetails> getPriceDetails() {
 		return priceDetails;
 	}
 
-	public void setPriceDetails(Set<ProductPriceDetails> priceDetails) {
+	public void setPriceDetails(Set<PriceDetails> priceDetails) {
 		this.priceDetails = priceDetails;
 	}
 
-	@ManyToOne
-	@JoinColumn(name = "LATEST_DETAILS_ID", nullable = true, unique = true)
-	public ProductPriceDetails getLatestDetails() {
-		return latestDetails;
-	}
-
-	public void setLatestDetails(ProductPriceDetails latestDetails) {
-		this.latestDetails = latestDetails;
-	}
+//	@ManyToOne
+//	@JoinColumn(name = "LATEST_DETAILS_ID", nullable = true, unique = true)
+//	public PriceDetails getLatestDetails() {
+//		return latestDetails;
+//	}
+//
+//	public void setLatestDetails(PriceDetails latestDetails) {
+//		this.latestDetails = latestDetails;
+//	}
 }

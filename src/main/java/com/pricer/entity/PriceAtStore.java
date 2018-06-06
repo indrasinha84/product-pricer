@@ -38,8 +38,8 @@ public class PriceAtStore implements Serializable {
 
 	private Store store;
 	private Product product;
-	private Set<ProductPriceDetails> lowestPrices;
-	private Set<ProductPriceDetails> highestPrices;
+	private Set<PriceDetails> lowestPrices;
+	private Set<PriceDetails> highestPrices;
 	private String notes;
 	private Double storePrice;
 	private String effectivestatus;
@@ -79,20 +79,20 @@ public class PriceAtStore implements Serializable {
 	}
 
 	@OneToMany(mappedBy = "lowestPrice")
-	public Set<ProductPriceDetails> getLowestPrices() {
+	public Set<PriceDetails> getLowestPrices() {
 		return lowestPrices;
 	}
 
-	public void setLowestPrices(Set<ProductPriceDetails> lowestPrices) {
+	public void setLowestPrices(Set<PriceDetails> lowestPrices) {
 		this.lowestPrices = lowestPrices;
 	}
 
 	@OneToMany(mappedBy = "highestPrice")
-	public Set<ProductPriceDetails> getHighestPrices() {
+	public Set<PriceDetails> getHighestPrices() {
 		return highestPrices;
 	}
 
-	public void setHighestPrices(Set<ProductPriceDetails> highestPrices) {
+	public void setHighestPrices(Set<PriceDetails> highestPrices) {
 		this.highestPrices = highestPrices;
 	}
 
