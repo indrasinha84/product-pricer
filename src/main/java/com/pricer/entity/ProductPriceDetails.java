@@ -42,11 +42,11 @@ public class ProductPriceDetails implements Serializable {
 	
 	@ManyToOne
     @JoinColumn(name="LOWEST_PRICE_ID", nullable=false)
-	private StorePrice lowestPrice;
+	private PriceAtStore lowestPrice;
 	
 	@ManyToOne
     @JoinColumn(name="HIGHEST_PRICE_ID", nullable=false)
-	private StorePrice highestPrice;
+	private PriceAtStore highestPrice;
 	
 	@Column(name = "IDEAL_STORE_PRICE")
 	private Double idealPrice;
@@ -83,19 +83,19 @@ public class ProductPriceDetails implements Serializable {
 		this.averageStorePrice = averageStorePrice;
 	}
 
-	public StorePrice getLowestPrice() {
+	public PriceAtStore getLowestPrice() {
 		return lowestPrice;
 	}
 
-	public void setLowestPrice(StorePrice lowestPrice) {
+	public void setLowestPrice(PriceAtStore lowestPrice) {
 		this.lowestPrice = lowestPrice;
 	}
 
-	public StorePrice getHighestPrice() {
+	public PriceAtStore getHighestPrice() {
 		return highestPrice;
 	}
 
-	public void setHighestPrice(StorePrice highestPrice) {
+	public void setHighestPrice(PriceAtStore highestPrice) {
 		this.highestPrice = highestPrice;
 	}
 

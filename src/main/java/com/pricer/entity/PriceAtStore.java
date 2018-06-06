@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,55 +13,42 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.id.enhanced.SequenceStyleGenerator;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Table(name = "STORE_PRICE")
-public class StorePrice implements Serializable {
+public class PriceAtStore implements Serializable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4041352438225918708L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STORE_PRICE_ID_GENERATOR")
-	@SequenceGenerator(name = "STORE_PRICE_ID_GENERATOR", sequenceName = "SEQ_STORE_PRICE", allocationSize = 1)
-	@Column(name = "STORE_PRICE_ID")
-	private Integer id;
+	private static final long serialVersionUID = 3226347194998137862L;
+	
+private Integer id;
 
 	
-	@ManyToOne
-    @JoinColumn(name="STORE_ID", nullable=false)
+
 	private Store store;
-
-	@ManyToOne
-    @JoinColumn(name="PRODUCT_ID", nullable=false)
 	private Product product;
-	
-	@OneToMany(mappedBy = "lowestPrice")
 	private Set<ProductPriceDetails> lowestPrices;
-	
-	@OneToMany(mappedBy = "highestPrice")
 	private Set<ProductPriceDetails> highestPrices;
-	
-
-	@Column(name = "PRODUCT_NOTES", length = 1000)
-	private String productNotes;
-
-	@Column(name = "STORE_PRICE")
+	private String notes;
 	private Double storePrice;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATED_DATE")
-	@CreatedDate
 	private Date createdDate;
-
+	
+	
+	@Id
+	@Column(name = "STORE_PRICE_ID")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STORE_PRICE_ID_GENERATOR")
+	@GenericGenerator(name = "STORE_PRICE_ID_GENERATOR", strategy = "com.pricer.entity.id.generator.PriceAtStoreIdGenerator", 
+	parameters = {@Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SEQ_STORE_PRICE")})
 	public Integer getId() {
 		return id;
 	}
@@ -69,6 +57,8 @@ public class StorePrice implements Serializable {
 		this.id = id;
 	}
 
+	@ManyToOne(cascade=CascadeType.DETACH)
+    @JoinColumn(name="STORE_ID", nullable=false)
 	public Store getStore() {
 		return store;
 	}
@@ -76,7 +66,9 @@ public class StorePrice implements Serializable {
 	public void setStore(Store store) {
 		this.store = store;
 	}
-
+	
+	@ManyToOne(cascade=CascadeType.DETACH)
+    @JoinColumn(name="PRODUCT_ID", nullable=false)
 	public Product getProduct() {
 		return product;
 	}
@@ -85,6 +77,7 @@ public class StorePrice implements Serializable {
 		this.product = product;
 	}
 
+	@OneToMany(mappedBy = "lowestPrice")
 	public Set<ProductPriceDetails> getLowestPrices() {
 		return lowestPrices;
 	}
@@ -93,6 +86,8 @@ public class StorePrice implements Serializable {
 		this.lowestPrices = lowestPrices;
 	}
 
+	
+	@OneToMany(mappedBy = "highestPrice")
 	public Set<ProductPriceDetails> getHighestPrices() {
 		return highestPrices;
 	}
@@ -101,14 +96,17 @@ public class StorePrice implements Serializable {
 		this.highestPrices = highestPrices;
 	}
 
-	public String getProductNotes() {
-		return productNotes;
+
+	@Column(name = "PRODUCT_NOTES", length = 1000)
+	public String getNotes() {
+		return notes;
 	}
 
-	public void setProductNotes(String productNotes) {
-		this.productNotes = productNotes;
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 
+	@Column(name = "STORE_PRICE")
 	public Double getStorePrice() {
 		return storePrice;
 	}
@@ -116,7 +114,10 @@ public class StorePrice implements Serializable {
 	public void setStorePrice(Double storePrice) {
 		this.storePrice = storePrice;
 	}
-
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "CREATED_DATE")
+	@CreatedDate
 	public Date getCreatedDate() {
 		return createdDate;
 	}
