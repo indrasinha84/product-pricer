@@ -10,12 +10,12 @@ import org.springframework.data.domain.Example;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.pricer.entity.PriceAtStore;
+import com.pricer.entity.MarketPrice;
 import com.pricer.entity.Product;
 import com.pricer.entity.Store;
 
 @JsonPropertyOrder({ "store", "product", "price", "notes" })
-public class PriceAtStoreRequestDTO implements Serializable, IJSONRequest<PriceAtStore, Integer> {
+public class MarketPriceRequestDTO implements Serializable, IJSONRequest<MarketPrice, Integer> {
 
 	/**
 	 * 
@@ -68,13 +68,13 @@ public class PriceAtStoreRequestDTO implements Serializable, IJSONRequest<PriceA
 	}
 
 	@Override
-	public PriceAtStore toEntity(Integer id) {
+	public MarketPrice toEntity(Integer id) {
 		Store store = new Store();
 		store.setId(this.getStore());
 		Product product = new Product();
 		product.setId(this.getProduct());
-		Set<PriceAtStore> storePrices = new HashSet<>();
-		PriceAtStore entity = new PriceAtStore();
+		Set<MarketPrice> storePrices = new HashSet<>();
+		MarketPrice entity = new MarketPrice();
 		storePrices.add(entity);
 		product.setStorePrice(storePrices);
 		entity.setId(id);
@@ -86,12 +86,12 @@ public class PriceAtStoreRequestDTO implements Serializable, IJSONRequest<PriceA
 	}
 
 	@Override
-	public PriceAtStore buildEntityUsingNaturalKey() {
+	public MarketPrice buildEntityUsingNaturalKey() {
 		Store store = new Store();
 		store.setId(this.getStore());
 		Product product = new Product();
 		product.setId(this.getProduct());
-		PriceAtStore entity = new PriceAtStore();
+		MarketPrice entity = new MarketPrice();
 		entity.setStore(store);
 		entity.setProduct(product);
 		return entity;

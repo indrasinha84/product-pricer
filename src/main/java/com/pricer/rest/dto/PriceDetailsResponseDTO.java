@@ -6,7 +6,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.pricer.entity.PriceAtStore;
+import com.pricer.entity.MarketPrice;
 import com.pricer.entity.PriceDetails;
 
 @JsonPropertyOrder({ "product", "name", "description", "basePrice", "averagePrice", "lowestPrice", "highestPrice",

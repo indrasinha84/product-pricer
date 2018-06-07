@@ -5,10 +5,10 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.pricer.entity.PriceAtStore;
+import com.pricer.entity.MarketPrice;
 
 @JsonPropertyOrder({ "store", "product", "price", "created" })
-public class PriceAtStoreResponseDTO implements Serializable, IJSONResponse<PriceAtStore> {
+public class MarketPriceResponseDTO implements Serializable, IJSONResponse<MarketPrice> {
 
 	/**
 	 * 
@@ -57,7 +57,7 @@ public class PriceAtStoreResponseDTO implements Serializable, IJSONResponse<Pric
 	}
 
 	@Override
-	public void buildResponse(PriceAtStore entity) {
+	public void buildResponse(MarketPrice entity) {
 		this.setStore(entity.getStore().getId());
 		this.setProduct(entity.getProduct().getId());
 		this.setStorePrice(entity.getStorePrice());

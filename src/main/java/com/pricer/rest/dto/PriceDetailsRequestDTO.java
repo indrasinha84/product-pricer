@@ -2,7 +2,7 @@ package com.pricer.rest.dto;
 
 import java.io.Serializable;
 
-import com.pricer.entity.PriceAtStore;
+import com.pricer.entity.MarketPrice;
 import com.pricer.entity.PriceDetails;
 import com.pricer.entity.Product;
 import com.pricer.entity.Store;

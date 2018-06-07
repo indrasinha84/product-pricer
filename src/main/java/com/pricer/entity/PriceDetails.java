@@ -34,8 +34,8 @@ public class PriceDetails implements Serializable {
 	private Integer id;
 	private Product product;
 	private Double averageStorePrice;
-	private PriceAtStore lowestPrice;
-	private PriceAtStore highestPrice;
+	private MarketPrice lowestPrice;
+	private MarketPrice highestPrice;
 	private Double idealPrice;
 	private Integer countOfPrices;
 	private Date createdDate;
@@ -74,21 +74,21 @@ public class PriceDetails implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "LOWEST_PRICE_ID", nullable = false)
-	public PriceAtStore getLowestPrice() {
+	public MarketPrice getLowestPrice() {
 		return lowestPrice;
 	}
 
-	public void setLowestPrice(PriceAtStore lowestPrice) {
+	public void setLowestPrice(MarketPrice lowestPrice) {
 		this.lowestPrice = lowestPrice;
 	}
 
 	@ManyToOne
 	@JoinColumn(name = "HIGHEST_PRICE_ID", nullable = false)
-	public PriceAtStore getHighestPrice() {
+	public MarketPrice getHighestPrice() {
 		return highestPrice;
 	}
 
-	public void setHighestPrice(PriceAtStore highestPrice) {
+	public void setHighestPrice(MarketPrice highestPrice) {
 		this.highestPrice = highestPrice;
 	}
 

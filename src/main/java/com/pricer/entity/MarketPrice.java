@@ -27,7 +27,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table(name = "STORE_PRICE")
 @EntityListeners(AuditingEntityListener.class)
-public class PriceAtStore implements Serializable {
+public class MarketPrice implements Serializable {
 
 	/**
 	 * 
@@ -48,7 +48,7 @@ public class PriceAtStore implements Serializable {
 	@Id
 	@Column(name = "STORE_PRICE_ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STORE_PRICE_ID_GENERATOR")
-	@GenericGenerator(name = "STORE_PRICE_ID_GENERATOR", strategy = "com.pricer.entity.id.generator.PriceAtStoreIdGenerator", parameters = {
+	@GenericGenerator(name = "STORE_PRICE_ID_GENERATOR", strategy = "com.pricer.entity.id.generator.MarketPriceIdGenerator", parameters = {
 			@Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SEQ_STORE_PRICE") })
 	public Integer getId() {
 		return id;

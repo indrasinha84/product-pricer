@@ -42,7 +42,7 @@ public class Store implements Serializable {
 	private String name;
 	private String description;
 	private Date createdDate;
-    private Set<PriceAtStore> storePrice;
+    private Set<MarketPrice> storePrice;
 
 	@Id	
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STORE_ID_GENERATOR")
@@ -91,11 +91,11 @@ public class Store implements Serializable {
 	}
 
 	@OneToMany(mappedBy="store")
-	public Set<PriceAtStore> getStorePrice() {
+	public Set<MarketPrice> getStorePrice() {
 		return storePrice;
 	}
 
-	public void setStorePrice(Set<PriceAtStore> storePrice) {
+	public void setStorePrice(Set<MarketPrice> storePrice) {
 		this.storePrice = storePrice;
 	}
 }

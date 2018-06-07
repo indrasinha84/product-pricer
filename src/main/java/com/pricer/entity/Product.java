@@ -39,7 +39,7 @@ public class Product implements Serializable {
 	private String description;
 	private Double basePrice;
 	private Date createdDate;
-	private Set<PriceAtStore> storePrice;
+	private Set<MarketPrice> storePrice;
 	private Set<PriceDetails> priceDetails;
 //	private PriceDetails latestDetails;
 
@@ -95,11 +95,11 @@ public class Product implements Serializable {
 	}
 
 	@OneToMany(mappedBy = "product")
-	public Set<PriceAtStore> getStorePrice() {
+	public Set<MarketPrice> getStorePrice() {
 		return storePrice;
 	}
 
-	public void setStorePrice(Set<PriceAtStore> storePrice) {
+	public void setStorePrice(Set<MarketPrice> storePrice) {
 		this.storePrice = storePrice;
 	}
 

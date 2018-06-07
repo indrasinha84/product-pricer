@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pricer.rest.dto.JSONResponse;
-import com.pricer.rest.dto.PriceAtStoreRequestDTO;
+import com.pricer.rest.dto.MarketPriceRequestDTO;
 import com.pricer.rest.dto.PriceDetailsRequestDTO;
 import com.pricer.rest.dto.PriceDetailsResponseDTO;
 import com.pricer.rest.dto.ProductRequestDTO;
