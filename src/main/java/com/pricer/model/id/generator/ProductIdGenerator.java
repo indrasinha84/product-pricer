@@ -1,4 +1,4 @@
-package com.pricer.entity.id.generator;
+package com.pricer.model.id.generator;
 
 import java.io.Serializable;
 
@@ -6,22 +6,22 @@ import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.enhanced.SequenceStyleGenerator;
 
-import com.pricer.model.Store;
+import com.pricer.model.Product;
 import com.pricer.rest.exception.IdNotAllowedException;
 
-public class StoreIdGenerator extends SequenceStyleGenerator {
-
+public class ProductIdGenerator extends SequenceStyleGenerator {
+	
 	@Override
-	public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException, RuntimeException {
+	public Serializable generate(SharedSessionContractImplementor session, Object object) throws HibernateException {
 		Integer generatedId = (Integer) super.generate(session, object);
-		Integer inputId = ((Store) object).getId();
+		Integer inputId = ((Product) object).getId();
 		if (inputId != null && inputId > generatedId) {
-			throw new IdNotAllowedException("Store", "id", inputId);
+			throw new IdNotAllowedException("Product", "id", inputId);
 		} else if (inputId != null) {
 			return inputId;
 		}
-
 		return generatedId;
 	}
-
+	
+	
 }

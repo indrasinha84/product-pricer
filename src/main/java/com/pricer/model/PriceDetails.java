@@ -56,7 +56,7 @@ public class PriceDetails implements Serializable {
 	@Id
 	@Column(name = "DETAILS_ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DETAILS_ID_GENERATOR")
-	@GenericGenerator(name = "DETAILS_ID_GENERATOR", strategy = "com.pricer.entity.id.generator.PriceDetailsIdGenerator", parameters = {
+	@GenericGenerator(name = "DETAILS_ID_GENERATOR", strategy = "com.pricer.model.id.generator.PriceDetailsIdGenerator", parameters = {
 			@Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SEQ_PRICE_DETAILS_LOG") })
 	@JsonIgnore
 	public Integer getId() {
@@ -189,6 +189,14 @@ public class PriceDetails implements Serializable {
 
 	public void setEffectiveStatus(EffectiveStatus effectiveStatus) {
 		this.effectiveStatus = effectiveStatus;
+	}
+	
+	@Override
+	public String toString() {
+		return "PriceDetails [id=" + id + ", product=" + product + ", averageStorePrice=" + averageStorePrice
+				+ ", lowestPrice=" + lowestPrice + ", highestPrice=" + highestPrice + ", idealPrice=" + idealPrice
+				+ ", countOfPrices=" + countOfPrices + ", createdDate=" + createdDate + ", effectiveStatus="
+				+ effectiveStatus + "]";
 	}
 
 }

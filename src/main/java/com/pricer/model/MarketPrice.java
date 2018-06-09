@@ -30,6 +30,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.pricer.model.id.generator.MarketPriceIdGenerator;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Entity
@@ -54,11 +55,11 @@ public class MarketPrice implements Serializable {
 	private Double storePrice;
 	private EffectiveStatus effectiveStatus;
 	private Date createdDate;
-
+	
 	@Id
 	@Column(name = "STORE_PRICE_ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STORE_PRICE_ID_GENERATOR")
-	@GenericGenerator(name = "STORE_PRICE_ID_GENERATOR", strategy = "com.pricer.entity.id.generator.MarketPriceIdGenerator", parameters = {
+	@GenericGenerator(name = "STORE_PRICE_ID_GENERATOR", strategy ="com.pricer.model.id.generator.MarketPriceIdGenerator", parameters = {
 			@Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SEQ_STORE_PRICE") })
 	@JsonIgnore
 	public Integer getId() {
@@ -160,6 +161,13 @@ public class MarketPrice implements Serializable {
 
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+
+	@Override
+	public String toString() {
+		return "MarketPrice [id=" + id + ", store=" + store + ", product=" + product + ", notes=" + notes
+				+ ", storePrice=" + storePrice + ", effectiveStatus=" + effectiveStatus + ", createdDate=" + createdDate
+				+ "]";
 	}
 
 }

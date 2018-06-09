@@ -107,4 +107,13 @@ public class Store implements Serializable {
 	public void setStorePrice(Set<MarketPrice> storePrice) {
 		this.storePrice = storePrice;
 	}
+
+	@Override
+	public String toString() {
+		return "Store [id=" + id + ", name=" + name + ", description=" + description + ", createdDate=" + createdDate
+				+ "]";
+	}
+
+	
+	
 }

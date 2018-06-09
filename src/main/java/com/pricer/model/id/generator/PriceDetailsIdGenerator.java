@@ -1,4 +1,4 @@
-package com.pricer.entity.id.generator;
+package com.pricer.model.id.generator;
 
 import java.io.Serializable;
 

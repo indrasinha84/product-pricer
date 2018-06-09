@@ -53,7 +53,7 @@ public class Product implements Serializable {
 	@Id
 	@Column(name = "PRODUCT_ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PRODUCT_ID_GENERATOR")
-	@GenericGenerator(name = "PRODUCT_ID_GENERATOR", strategy = "com.pricer.entity.id.generator.ProductIdGenerator", parameters = {
+	@GenericGenerator(name = "PRODUCT_ID_GENERATOR", strategy = "com.pricer.model.id.generator.ProductIdGenerator", parameters = {
 			@Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SEQ_PRODUCT") })
 	@JsonProperty(value = "identifier", access = Access.READ_ONLY)
 	public Integer getId() {
@@ -128,4 +128,11 @@ public class Product implements Serializable {
 	public void setPriceDetails(Set<PriceDetails> priceDetails) {
 		this.priceDetails = priceDetails;
 	}
+
+	@Override
+	public String toString() {
+		return "Product [id=" + id + ", name=" + name + ", description=" + description + ", basePrice=" + basePrice
+				+ ", createdDate=" + createdDate + "]";
+	}
+
 }
