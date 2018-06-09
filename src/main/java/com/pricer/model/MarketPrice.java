@@ -30,7 +30,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
-import com.pricer.model.id.generator.MarketPriceIdGenerator;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Entity

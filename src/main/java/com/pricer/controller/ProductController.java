@@ -1,5 +1,6 @@
 package com.pricer.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -46,6 +47,7 @@ public class ProductController {
 	public JSONResponse<Product> addProduct(@Valid @RequestBody Product product) {
 		JSONResponse<Product> result;
 		try {
+			product.setCreatedDate(new Date());
 			result = productService.addEntity(product);
 		} catch (RuntimeException e) {
 			LOGGER.error("Creation of product failed. ", e);

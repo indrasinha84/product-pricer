@@ -51,7 +51,7 @@ public class Store implements Serializable {
 
 	@Id	
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STORE_ID_GENERATOR")
-	@GenericGenerator(name = "STORE_ID_GENERATOR", strategy = "com.pricer.entity.id.generator.StoreIdGenerator",
+	@GenericGenerator(name = "STORE_ID_GENERATOR", strategy = "com.pricer.model.id.generator.StoreIdGenerator",
 			parameters = {@Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SEQ_STORE")})
 	@JsonProperty(value = "identifier", access = Access.READ_ONLY)
 	@Column(name = "STORE_ID")

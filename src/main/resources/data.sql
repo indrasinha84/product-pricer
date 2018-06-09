@@ -79,7 +79,10 @@ CREATE TABLE price_calculation_request
      details_id_end         INTEGER, 
      requested_date         TIMESTAMP, 
      start_date             TIMESTAMP, 
-     end_date               TIMESTAMP 
+     end_date               TIMESTAMP,
+     details_id_restart     INTEGER, 
+     job_sts                VARCHAR(50)
+
   ); 
 
 CREATE SEQUENCE seq_price_calculation_request START WITH 1 INCREMENT BY 1; 
@@ -87,6 +90,7 @@ CREATE SEQUENCE seq_price_calculation_request START WITH 1 INCREMENT BY 1;
 CREATE UNIQUE INDEX ind1_price_calculation_request 
   ON price_calculation_request (calculation_request_id); 
 
---- Index on CALCULATION_REQUEST_ID 
+CREATE INDEX ind2_price_calculation_request 
+  ON price_calculation_request (job_sts); 
 
 COMMIT; 
