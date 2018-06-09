@@ -29,7 +29,7 @@ import com.pricer.rest.exception.ResourceNotCreatedException;
 import com.pricer.rest.exception.ResourceNotDeletedException;
 import com.pricer.rest.exception.ResourceNotFoundException;
 import com.pricer.service.DataAccessService;
-import com.pricer.service.PriceDetailsService;
+import com.pricer.service.impl.PriceDetailsService;
 
 @RestController
 @RequestMapping("/product")

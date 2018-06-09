@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import com.pricer.service.ProductService;
+import com.pricer.service.impl.ProductService;
 
 @SpringBootApplication
 @EnableJpaAuditing

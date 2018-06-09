@@ -1,4 +1,4 @@
-package com.pricer.service;
+package com.pricer.service.impl;
 
 import org.springframework.stereotype.Service;
 

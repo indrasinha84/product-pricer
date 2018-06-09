@@ -26,7 +26,7 @@ import com.pricer.rest.exception.ResourceModficationException;
 import com.pricer.rest.exception.ResourceNotCreatedException;
 import com.pricer.rest.exception.ResourceNotDeletedException;
 import com.pricer.rest.exception.ResourceNotFoundException;
-import com.pricer.service.MarketPriceService;
+import com.pricer.service.impl.MarketPriceService;
 
 @RestController
 @RequestMapping("/store/product")
