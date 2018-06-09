@@ -9,6 +9,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({ "job", "started" })
 public class SchedulerResponse implements Serializable {
 
+	public void setStarted(Date started) {
+		this.started = started;
+	}
+
 	/**
 	 * 
 	 */

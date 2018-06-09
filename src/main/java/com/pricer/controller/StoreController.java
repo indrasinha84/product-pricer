@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pricer.model.JSONResponse;
@@ -38,7 +39,7 @@ public class StoreController {
 	private static Logger LOGGER = LoggerFactory.getLogger(StoreController.class);
 
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<Store> addStore(@Valid @RequestBody Store store) {
+	public @ResponseBody JSONResponse<Store> addStore(@Valid @RequestBody Store store) {
 		JSONResponse<Store> result;
 		try {
 			result = storeService.addEntity(store);
@@ -51,7 +52,7 @@ public class StoreController {
 	}
 
 	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<Store> putStore(@PathVariable Integer id, @Valid @RequestBody Store store) {
+	public @ResponseBody JSONResponse<Store> putStore(@PathVariable Integer id, @Valid @RequestBody Store store) {
 		JSONResponse<Store> result;
 		try {
 			result = storeService.putEntity(store, id);
@@ -68,7 +69,7 @@ public class StoreController {
 	}
 
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<Store> retriveStore(@PathVariable Integer id) {
+	public @ResponseBody JSONResponse<Store> retriveStore(@PathVariable Integer id) {
 		JSONResponse<Store> result;
 		try {
 			result = storeService.findEntity(id);
@@ -83,7 +84,7 @@ public class StoreController {
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<List<Store>> listStores() {
+	public @ResponseBody JSONResponse<List<Store>> listStores() {
 		JSONResponse<List<Store>> result;
 		try {
 			result = storeService.listEntities();
@@ -95,7 +96,7 @@ public class StoreController {
 	}
 
 	@DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<String> deleteStore(@PathVariable Integer id) {
+	public @ResponseBody JSONResponse<String> deleteStore(@PathVariable Integer id) {
 		JSONResponse<String> result;
 		try {
 			result = storeService.deleteEntity(id);

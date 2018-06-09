@@ -80,7 +80,8 @@ CREATE TABLE price_calculation_request
      requested_date         TIMESTAMP, 
      start_date             TIMESTAMP, 
      end_date               TIMESTAMP,
-     details_id_restart     INTEGER, 
+     details_id_restart     INTEGER,
+	 event_type 			VARCHAR(50),
      job_sts                VARCHAR(50)
 
   ); 
@@ -91,6 +92,6 @@ CREATE UNIQUE INDEX ind1_price_calculation_request
   ON price_calculation_request (calculation_request_id); 
 
 CREATE INDEX ind2_price_calculation_request 
-  ON price_calculation_request (job_sts); 
+  ON price_calculation_request (job_sts, details_id_end); 
 
 COMMIT; 

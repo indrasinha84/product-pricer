@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pricer.model.JSONResponse;
@@ -44,7 +45,7 @@ public class ProductController {
 	private static Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<Product> addProduct(@Valid @RequestBody Product product) {
+	public @ResponseBody JSONResponse<Product> addProduct(@Valid @RequestBody Product product) {
 		JSONResponse<Product> result;
 		try {
 			product.setCreatedDate(new Date());
@@ -58,7 +59,7 @@ public class ProductController {
 	}
 
 	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<Product> putProduct(@PathVariable Integer id, @Valid @RequestBody Product product) {
+	public @ResponseBody JSONResponse<Product> putProduct(@PathVariable Integer id, @Valid @RequestBody Product product) {
 		JSONResponse<Product> result;
 		try {
 			result = productService.putEntity(product, id);
@@ -73,7 +74,7 @@ public class ProductController {
 	}
 
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<Product> retriveProduct(@PathVariable Integer id) {
+	public @ResponseBody JSONResponse<Product> retriveProduct(@PathVariable Integer id) {
 		JSONResponse<Product> result;
 		try {
 			result = productService.findEntity(id);
@@ -88,7 +89,7 @@ public class ProductController {
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<List<Product>> listProducts() {
+	public @ResponseBody JSONResponse<List<Product>> listProducts() {
 		JSONResponse<List<Product>> result;
 		try {
 			result = productService.listEntities();
@@ -100,7 +101,7 @@ public class ProductController {
 	}
 
 	@DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<String> deleteProduct(@PathVariable Integer id) {
+	public @ResponseBody JSONResponse<String> deleteProduct(@PathVariable Integer id) {
 		JSONResponse<String> result;
 		try {
 			result = productService.deleteEntity(id);
@@ -115,7 +116,7 @@ public class ProductController {
 	}
 
 	@GetMapping(path = "/{product}/prices", produces = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<PriceDetails> getPriceDetailsForAProduct(@PathVariable Integer product) {
+	public @ResponseBody JSONResponse<PriceDetails> getPriceDetailsForAProduct(@PathVariable Integer product) {
 		JSONResponse<PriceDetails> result;
 		try {
 			result = priceDetailsService.getPriceDetails(product);

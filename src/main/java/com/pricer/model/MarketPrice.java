@@ -53,7 +53,7 @@ public class MarketPrice implements Serializable {
 	private String notes;
 	private Double storePrice;
 	private EffectiveStatus effectiveStatus;
-	private Date createdDate;
+	private Date createdDate;	
 	
 	@Id
 	@Column(name = "STORE_PRICE_ID")

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pricer.model.JSONResponse;
@@ -38,7 +39,7 @@ public class MarketPriceController {
 	private static Logger LOGGER = LoggerFactory.getLogger(MarketPriceController.class);
 
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<MarketPrice> addMarketPrice(@Valid @RequestBody MarketPrice marketPrice) {
+	public @ResponseBody JSONResponse<MarketPrice> addMarketPrice(@Valid @RequestBody MarketPrice marketPrice) {
 		JSONResponse<MarketPrice> result;
 		try {
 			result = marketPriceService.addEntity(marketPrice);
@@ -55,7 +56,7 @@ public class MarketPriceController {
 	}
 	
 	@PutMapping(path = "/{store}/{product}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<MarketPrice> putMarketPrice(@PathVariable Integer store, @PathVariable Integer product, 
+	public @ResponseBody JSONResponse<MarketPrice> putMarketPrice(@PathVariable Integer store, @PathVariable Integer product, 
 								@Valid @RequestBody MarketPrice marketPrice) {
 		JSONResponse<MarketPrice> result;
 		try {
@@ -69,11 +70,10 @@ public class MarketPriceController {
 					marketPrice.getStoreId() + "/" + marketPrice.getProductId());
 		}
 		return result;
-	}
-	
+	}	
 
 	@GetMapping(path = "/{store}/{product}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<MarketPrice> retrieveMarketPrice(@PathVariable Integer store, @PathVariable Integer product) {
+	public @ResponseBody JSONResponse<MarketPrice> retrieveMarketPrice(@PathVariable Integer store, @PathVariable Integer product) {
 		JSONResponse<MarketPrice> result;
 		try {
 			result = marketPriceService.getMarketPrice(store, product);
@@ -88,7 +88,7 @@ public class MarketPriceController {
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<List<MarketPrice>> listMarketPrices() {
+	public @ResponseBody JSONResponse<List<MarketPrice>> listMarketPrices() {
 		JSONResponse<List<MarketPrice>> result;
 		try {
 			result = marketPriceService.listEntities();
@@ -100,7 +100,7 @@ public class MarketPriceController {
 	}
 
 	@DeleteMapping(path = "/{store}/{product}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<String> deleteMarketPrice(@PathVariable Integer store, @PathVariable Integer product) {
+	public @ResponseBody JSONResponse<String> deleteMarketPrice(@PathVariable Integer store, @PathVariable Integer product) {
 		JSONResponse<String> result;
 		try {
 			result = marketPriceService.deleteMarketPrice(store, product);
