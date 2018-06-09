@@ -2,27 +2,33 @@ package com.pricer.service;
 
 import org.springframework.stereotype.Service;
 
-import com.pricer.entity.PriceDetails;
+import com.pricer.model.EffectiveStatus;
+import com.pricer.model.JSONResponse;
+import com.pricer.model.PriceDetails;
 import com.pricer.repository.PriceDetailsRepository;
-import com.pricer.rest.dto.PriceDetailsRequestDTO;
-import com.pricer.rest.dto.PriceDetailsResponseDTO;
 
-@Service
-public class PriceDetailsService
-		extends AbstractDataAccessService<PriceDetails, Integer, PriceDetailsResponseDTO, PriceDetailsRequestDTO, PriceDetailsRepository> {
+@Service("priceDetailsServiceSoft")
+public class PriceDetailsService extends AbstractSoftDataAccessService<PriceDetails, Integer, PriceDetailsRepository> {
 
 	@Override
-	public PriceDetailsResponseDTO getResonseDTO() {
-		return new PriceDetailsResponseDTO();
+	protected void setEffectiveStatus(PriceDetails entity, EffectiveStatus effectiveStatus) {
+		entity.setEffectiveStatus(effectiveStatus);
 	}
 
 	@Override
-	public void updateEffectiveStatus(PriceDetails old, String string) {
-		
+	protected PriceDetails getEntityInstance() {
+		return new PriceDetails();
+	}
+
+	public JSONResponse<PriceDetails> getPriceDetails(Integer product) {
+		PriceDetails request = getEntityInstance();
+		request.setProductId(product);
+		return findEntityByExample(request);
 	}
 
 	@Override
-	public PriceDetailsRequestDTO getRequestDTO() {
-		return new PriceDetailsRequestDTO();
-	}
+	protected PriceDetails setNaturalKey(PriceDetails request) {
+		PriceDetails lookup = getEntityInstance();
+		lookup.setProductId(request.getProductId());
+		return lookup;	}
 }

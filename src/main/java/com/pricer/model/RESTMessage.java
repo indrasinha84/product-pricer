@@ -1,4 +1,4 @@
-package com.pricer.entity;
+package com.pricer.model;
 
 public enum RESTMessage {
 	

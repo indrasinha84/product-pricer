@@ -3,27 +3,27 @@ package com.pricer.rest.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(value = HttpStatus.ALREADY_REPORTED)
-public class ResourceAlreadyExist extends RuntimeException {
+@ResponseStatus(value = HttpStatus.FAILED_DEPENDENCY)
+
+public class DependencyPresentException extends RuntimeException {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5026597817284941768L;
+	private static final long serialVersionUID = -4423740691144212466L;
 	
 	private String resourceName;
 	private String fieldName;
 	private Object fieldValue;
 
-	public ResourceAlreadyExist(String resourceName, String fieldName, Object fieldValue) {
-		super(String.format("%s already exists %s : '%s'", resourceName, fieldName, fieldValue));
+	public DependencyPresentException() {
+		
+	}
+	public DependencyPresentException(String resourceName, String fieldName, Object fieldValue) {
+		super(String.format("Dependendecy of %s present for %s : '%s'", resourceName, fieldName, fieldValue));
 		this.resourceName = resourceName;
 		this.fieldName = fieldName;
 		this.fieldValue = fieldValue;
-	}
-
-	public ResourceAlreadyExist() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public String getResourceName() {
@@ -33,9 +33,8 @@ public class ResourceAlreadyExist extends RuntimeException {
 	public String getFieldName() {
 		return fieldName;
 	}
-	
+
 	public Object getFieldValue() {
 		return fieldValue;
 	}
-
 }

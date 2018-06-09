@@ -1,11 +1,10 @@
-package com.pricer.rest.dto;
+package com.pricer.model;
 
 import java.io.Serializable;
 
 import org.springframework.http.HttpStatus;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.pricer.entity.RESTMessage;
 
 @JsonPropertyOrder({"status", "message", "payload"})
 public class JSONResponse<T> implements Serializable{

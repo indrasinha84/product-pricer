@@ -1,17 +1,13 @@
-package com.pricer.rest.dto;
+package com.pricer.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.pricer.entity.MarketPrice;
-import com.pricer.entity.PriceDetails;
 
-@JsonPropertyOrder({ "product", "name", "description", "basePrice", "averagePrice", "lowestPrice", "highestPrice",
-		"idealPrice", "count" })
-public class SchedulerResponse implements Serializable, IJSONResponse<PriceDetails> {
+@JsonPropertyOrder({ "job", "started" })
+public class SchedulerResponse implements Serializable {
 
 	/**
 	 * 
@@ -38,10 +34,4 @@ public class SchedulerResponse implements Serializable, IJSONResponse<PriceDetai
 	public Date getStarted() {
 		return started;
 	}
-
-	@Override
-	public void buildResponse(PriceDetails entity) {
-	}
-
-
 }

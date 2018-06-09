@@ -1,4 +1,4 @@
-package com.pricer.entity;
+package com.pricer.model;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -21,9 +23,15 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 @Entity
 @Table(name = "PRODUCT")
 @EntityListeners(AuditingEntityListener.class)
+@JsonPropertyOrder({ "name", "description", "basePrice", "created", "identifier" })
 public class Product implements Serializable {
 
 	public Product() {
@@ -41,13 +49,13 @@ public class Product implements Serializable {
 	private Date createdDate;
 	private Set<MarketPrice> storePrice;
 	private Set<PriceDetails> priceDetails;
-//	private PriceDetails latestDetails;
 
 	@Id
 	@Column(name = "PRODUCT_ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PRODUCT_ID_GENERATOR")
-	@GenericGenerator(name = "PRODUCT_ID_GENERATOR", strategy = "com.pricer.entity.id.generator.ProductIdGenerator", 
-	parameters = {@Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SEQ_PRODUCT")})
+	@GenericGenerator(name = "PRODUCT_ID_GENERATOR", strategy = "com.pricer.entity.id.generator.ProductIdGenerator", parameters = {
+			@Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SEQ_PRODUCT") })
+	@JsonProperty(value = "identifier", access = Access.READ_ONLY)
 	public Integer getId() {
 		return id;
 	}
@@ -57,6 +65,9 @@ public class Product implements Serializable {
 	}
 
 	@Column(name = "PRODUCT_NAME", length = 100, nullable = false)
+	@JsonProperty("name")
+	@NotBlank
+	@Size(max = 100)
 	public String getName() {
 		return name;
 	}
@@ -66,6 +77,8 @@ public class Product implements Serializable {
 	}
 
 	@Column(name = "PRODUCT_DESCRIPTION", length = 1000)
+	@JsonProperty("description")
+	@Size(max = 1000)
 	public String getDescription() {
 		return description;
 	}
@@ -75,6 +88,7 @@ public class Product implements Serializable {
 	}
 
 	@Column(name = "BASE_PRICE")
+	@JsonProperty("basePrice")
 	public Double getBasePrice() {
 		return basePrice;
 	}
@@ -86,6 +100,7 @@ public class Product implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
 	@Column(name = "CREATED_DATE", nullable = false, updatable = false)
+	@JsonProperty(value = "created", access = Access.READ_ONLY)
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -95,6 +110,7 @@ public class Product implements Serializable {
 	}
 
 	@OneToMany(mappedBy = "product")
+	@JsonIgnore
 	public Set<MarketPrice> getStorePrice() {
 		return storePrice;
 	}
@@ -104,6 +120,7 @@ public class Product implements Serializable {
 	}
 
 	@OneToMany(mappedBy = "product")
+	@JsonIgnore
 	public Set<PriceDetails> getPriceDetails() {
 		return priceDetails;
 	}
@@ -111,14 +128,4 @@ public class Product implements Serializable {
 	public void setPriceDetails(Set<PriceDetails> priceDetails) {
 		this.priceDetails = priceDetails;
 	}
-
-//	@ManyToOne
-//	@JoinColumn(name = "LATEST_DETAILS_ID", nullable = true, unique = true)
-//	public PriceDetails getLatestDetails() {
-//		return latestDetails;
-//	}
-//
-//	public void setLatestDetails(PriceDetails latestDetails) {
-//		this.latestDetails = latestDetails;
-//	}
 }

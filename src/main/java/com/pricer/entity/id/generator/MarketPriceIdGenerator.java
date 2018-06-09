@@ -6,7 +6,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.enhanced.SequenceStyleGenerator;
 
-import com.pricer.entity.MarketPrice;
+import com.pricer.model.MarketPrice;
 import com.pricer.rest.exception.IdNotAllowedException;
 
 public class MarketPriceIdGenerator extends SequenceStyleGenerator {

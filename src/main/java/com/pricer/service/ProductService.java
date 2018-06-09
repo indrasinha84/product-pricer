@@ -2,28 +2,17 @@ package com.pricer.service;
 
 import org.springframework.stereotype.Service;
 
-import com.pricer.entity.Product;
+import com.pricer.model.Product;
 import com.pricer.repository.ProductRepository;
-import com.pricer.rest.dto.ProductRequestDTO;
-import com.pricer.rest.dto.ProductResponseDTO;
 
 @Service
 public class ProductService
-		extends AbstractDataAccessService<Product, Integer, ProductResponseDTO, ProductRequestDTO, ProductRepository> {
+		extends CRUDDataAccessService<Product, Integer, ProductRepository> {
 
 	@Override
-	public ProductResponseDTO getResonseDTO() {
-		return new ProductResponseDTO();
+	protected void setKey(Product request, Integer key) {
+		request.setId(key);		
 	}
 
-	@Override
-	public void updateEffectiveStatus(Product old, String string) {
-		
-	}
-
-	@Override
-	public ProductRequestDTO getRequestDTO() {
-		return new ProductRequestDTO();
-	}
 
 }

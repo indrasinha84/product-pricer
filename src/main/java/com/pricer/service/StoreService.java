@@ -2,26 +2,16 @@ package com.pricer.service;
 
 import org.springframework.stereotype.Service;
 
-import com.pricer.entity.Store;
+import com.pricer.model.Store;
 import com.pricer.repository.StoreRepository;
-import com.pricer.rest.dto.StoreRequestDTO;
-import com.pricer.rest.dto.StoreResponseDTO;
 
-@Service
+@Service("storeCRUDService")
 public class StoreService
-		extends AbstractDataAccessService<Store, Integer, StoreResponseDTO, StoreRequestDTO, StoreRepository> {
+		extends CRUDDataAccessService<Store, Integer, StoreRepository> {
 
 	@Override
-	public StoreResponseDTO getResonseDTO() {
-		return new StoreResponseDTO();
+	protected void setKey(Store request, Integer key) {
+		request.setId(key);			
 	}
 
-	@Override
-	public void updateEffectiveStatus(Store old, String string) {		
-	}
-
-	@Override
-	public StoreRequestDTO getRequestDTO() {
-		return new StoreRequestDTO();
-	}
 }

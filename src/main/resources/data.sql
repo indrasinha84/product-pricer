@@ -1,4 +1,4 @@
---DROP SCHEMA IF EXISTS "PUBLIC" CASCADE; 
+DROP SCHEMA IF EXISTS "PUBLIC" CASCADE; 
 
 CREATE TABLE product 
   ( 
@@ -7,7 +7,7 @@ CREATE TABLE product
      product_description VARCHAR(1000), 
      base_price          NUMERIC, 
      created_date        TIMESTAMP
-  ); 
+  );
 
 CREATE SEQUENCE seq_product START WITH 1 INCREMENT BY 1; 
 
@@ -53,8 +53,8 @@ CREATE TABLE price_details_log
      details_id          INTEGER PRIMARY KEY, 
      product_id          INTEGER, 
      average_store_price NUMERIC, 
-     lowest_price_id     INTEGER, 
-     highest_price_id    INTEGER, 
+     lowest_price_id     NUMERIC, 
+     highest_price_id    NUMERIC, 
      ideal_store_price   NUMERIC, 
      count_of_prices     INTEGER, 
      eff_sts			 VARCHAR(1),

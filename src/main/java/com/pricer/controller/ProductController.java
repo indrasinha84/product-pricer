@@ -17,36 +17,34 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pricer.rest.dto.JSONResponse;
-import com.pricer.rest.dto.MarketPriceRequestDTO;
-import com.pricer.rest.dto.PriceDetailsRequestDTO;
-import com.pricer.rest.dto.PriceDetailsResponseDTO;
-import com.pricer.rest.dto.ProductRequestDTO;
-import com.pricer.rest.dto.ProductResponseDTO;
+import com.pricer.model.JSONResponse;
+import com.pricer.model.PriceDetails;
+import com.pricer.model.Product;
+import com.pricer.repository.ProductRepository;
 import com.pricer.rest.exception.IdNotAllowedException;
 import com.pricer.rest.exception.ResourceListingException;
 import com.pricer.rest.exception.ResourceModficationException;
 import com.pricer.rest.exception.ResourceNotCreatedException;
 import com.pricer.rest.exception.ResourceNotDeletedException;
 import com.pricer.rest.exception.ResourceNotFoundException;
+import com.pricer.service.DataAccessService;
 import com.pricer.service.PriceDetailsService;
-import com.pricer.service.ProductService;
 
 @RestController
 @RequestMapping("/product")
 public class ProductController {
 
 	@Autowired
-	ProductService productService;
+	PriceDetailsService priceDetailsService;
 
 	@Autowired
-	PriceDetailsService priceDetailsService;
+	DataAccessService<Product, Integer, ProductRepository> productService;
 
 	private static Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<ProductResponseDTO> addProduct(@Valid @RequestBody ProductRequestDTO product) {
-		JSONResponse<ProductResponseDTO> result;
+	public JSONResponse<Product> addProduct(@Valid @RequestBody Product product) {
+		JSONResponse<Product> result;
 		try {
 			result = productService.addEntity(product);
 		} catch (RuntimeException e) {
@@ -58,12 +56,10 @@ public class ProductController {
 	}
 
 	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<ProductResponseDTO> updateProduct(@PathVariable Integer id,
-			@Valid @RequestBody ProductRequestDTO product) {
-		JSONResponse<ProductResponseDTO> result;
+	public JSONResponse<Product> putProduct(@PathVariable Integer id, @Valid @RequestBody Product product) {
+		JSONResponse<Product> result;
 		try {
-
-			result = productService.updateEntity(product, id);
+			result = productService.putEntity(product, id);
 		} catch (IdNotAllowedException e) {
 			LOGGER.error("Id not allowed. ", e);
 			throw e;
@@ -75,10 +71,10 @@ public class ProductController {
 	}
 
 	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<ProductResponseDTO> retriveProduct(@PathVariable Integer id) {
-		JSONResponse<ProductResponseDTO> result;
+	public JSONResponse<Product> retriveProduct(@PathVariable Integer id) {
+		JSONResponse<Product> result;
 		try {
-			result = productService.retriveEntity(id);
+			result = productService.findEntity(id);
 		} catch (ResourceNotFoundException e) {
 			LOGGER.error("Product not found. ", e);
 			throw new ResourceNotFoundException("Product", "id", id);
@@ -90,8 +86,8 @@ public class ProductController {
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<List<ProductResponseDTO>> listProducts() {
-		JSONResponse<List<ProductResponseDTO>> result;
+	public JSONResponse<List<Product>> listProducts() {
+		JSONResponse<List<Product>> result;
 		try {
 			result = productService.listEntities();
 		} catch (RuntimeException e) {
@@ -117,14 +113,10 @@ public class ProductController {
 	}
 
 	@GetMapping(path = "/{product}/prices", produces = MediaType.APPLICATION_JSON_VALUE)
-	public JSONResponse<PriceDetailsResponseDTO> getPrice(@PathVariable Integer product) {
-		JSONResponse<PriceDetailsResponseDTO> result;
+	public JSONResponse<PriceDetails> getPriceDetailsForAProduct(@PathVariable Integer product) {
+		JSONResponse<PriceDetails> result;
 		try {
-			
-			
-			PriceDetailsRequestDTO request = new PriceDetailsRequestDTO();
-			request.setProduct(product);
-			result = priceDetailsService.findByNaturalKey(request);
+			result = priceDetailsService.getPriceDetails(product);
 		} catch (ResourceNotFoundException e) {
 			LOGGER.error("Price Details not found. ", e);
 			throw new ResourceNotFoundException("Price Details", "product", product);

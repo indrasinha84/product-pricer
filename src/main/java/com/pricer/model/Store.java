@@ -1,4 +1,4 @@
-package com.pricer.entity;
+package com.pricer.model;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -21,13 +23,16 @@ import org.hibernate.id.enhanced.SequenceStyleGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Entity
 @Table(name = "STORE")
 @EntityListeners(AuditingEntityListener.class)
+@JsonPropertyOrder({ "name", "description", "created", "identifier"})
 public class Store implements Serializable {
-	
 	
 	public Store() {
 		
@@ -48,7 +53,7 @@ public class Store implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STORE_ID_GENERATOR")
 	@GenericGenerator(name = "STORE_ID_GENERATOR", strategy = "com.pricer.entity.id.generator.StoreIdGenerator",
 			parameters = {@Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SEQ_STORE")})
-	@JsonProperty("identifier")
+	@JsonProperty(value = "identifier", access = Access.READ_ONLY)
 	@Column(name = "STORE_ID")
 	public Integer getId() {
 		return id;
@@ -59,6 +64,8 @@ public class Store implements Serializable {
 	}
 	
 	@JsonProperty("name")
+	@NotBlank
+	@Size(max=100)
 	@Column(name = "STORE_NAME", length = 100, nullable = false) 
 	public String getName() {
 		return name;
@@ -69,6 +76,7 @@ public class Store implements Serializable {
 	}
 
 	@JsonProperty("description")
+	@Size(max=1000)
 	@Column(name = "STORE_DESCRIPTION", length = 1000)
 	public String getDescription() {
 		return description;
@@ -80,8 +88,8 @@ public class Store implements Serializable {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
-	@JsonProperty("created")
-	@Column(name = "CREATED_DATE")
+	@Column(name = "CREATED_DATE", nullable = false, updatable = false)
+	@JsonProperty(value = "created", access = Access.READ_ONLY)
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -91,6 +99,7 @@ public class Store implements Serializable {
 	}
 
 	@OneToMany(mappedBy="store")
+	@JsonIgnore
 	public Set<MarketPrice> getStorePrice() {
 		return storePrice;
 	}
