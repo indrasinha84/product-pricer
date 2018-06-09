@@ -1,4 +1,4 @@
-package com.pricer.pricing.scheduler;
+package com.pricer.batch.scheduler;
 
 import org.springframework.stereotype.Component;
 
