@@ -24,7 +24,7 @@ public class ProductPricerApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		// Start batch thread.
+
 		(new Thread(new JobManagerWorker(jobManager))).start();
 	}
 }

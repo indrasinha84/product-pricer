@@ -49,15 +49,15 @@ public class PriceDetailsService extends AbstractSoftDataAccessService<PriceDeta
 
 			priceDetailsList.stream().forEach(p -> {
 				PriceDetails filter = setNaturalKey(p);
-				setEffectiveStatus(filter, EffectiveStatus.A);
+				setEffectiveStatus(filter, EffectiveStatus.ACTIVE);
 				Example<PriceDetails> example = Example.of(filter);
 				Optional<PriceDetails> entityOptional = repository.findOne(example);
 				if (entityOptional.isPresent()) {
 					PriceDetails old = entityOptional.get();
-					setEffectiveStatus(old, EffectiveStatus.I);
+					setEffectiveStatus(old, EffectiveStatus.INACTIVE);
 					toInActive.add(old);
 				}
-				setEffectiveStatus(p, EffectiveStatus.A);
+				setEffectiveStatus(p, EffectiveStatus.ACTIVE);
 				toActive.add(p);
 			});
 			toInActive.addAll(toActive);

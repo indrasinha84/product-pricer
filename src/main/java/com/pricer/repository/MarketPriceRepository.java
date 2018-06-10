@@ -10,7 +10,7 @@ import com.pricer.model.MarketPrice;
 @Repository
 public interface MarketPriceRepository extends JpaRepository<MarketPrice, Integer> {
 
-	@Query("SELECT MAX(M.id) FROM MarketPrice M WHERE M.effectiveStatus != com.pricer.model.EffectiveStatus.I")
+	@Query("SELECT MAX(M.id) FROM MarketPrice M WHERE M.effectiveStatus != com.pricer.model.EffectiveStatus.INACTIVE")
 	Integer getMaxPriceCollected();
 
 }

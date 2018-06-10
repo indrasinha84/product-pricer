@@ -34,7 +34,7 @@ CREATE TABLE store_price
      product_id     INTEGER, 
      product_notes  VARCHAR(1000), 
      store_price    NUMERIC,
-     eff_sts		VARCHAR(1),
+     eff_sts		VARCHAR(20),
      created_date   TIMESTAMP, 
      FOREIGN KEY (store_id) REFERENCES store(store_id), 
      FOREIGN KEY (product_id) REFERENCES product(product_id) 
@@ -57,7 +57,7 @@ CREATE TABLE price_details_log
      highest_price_id    NUMERIC, 
      ideal_store_price   NUMERIC, 
      count_of_prices     INTEGER, 
-     eff_sts			 VARCHAR(1),
+     eff_sts			 VARCHAR(20),
      created_date        TIMESTAMP, 
      FOREIGN KEY (lowest_price_id) REFERENCES store_price(store_price_id), 
      FOREIGN KEY (highest_price_id) REFERENCES store_price(store_price_id), 

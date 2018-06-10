@@ -121,7 +121,7 @@ public class Product implements Serializable {
 	@JsonIgnore
 	@Transient
 	public Set<MarketPrice> getActiveMarketPrices() {
-		return marketPrices.stream().filter(p -> EffectiveStatus.A.equals(p.getEffectiveStatus()))
+		return marketPrices.stream().filter(p -> EffectiveStatus.ACTIVE.equals(p.getEffectiveStatus()))
 				.collect(Collectors.toSet());
 	}
 

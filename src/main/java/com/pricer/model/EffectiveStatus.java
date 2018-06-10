@@ -1,6 +1,5 @@
 package com.pricer.model;
 
 public enum EffectiveStatus {
-	A, I;
-
+	ACTIVE, INACTIVE, DELETED;
 }

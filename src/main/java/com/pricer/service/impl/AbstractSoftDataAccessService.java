@@ -35,13 +35,13 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 	public JSONResponse<E> addEntity(E request) {
 		try {
 			E lookup = setNaturalKey(request);
-			setEffectiveStatus(lookup, EffectiveStatus.A);
+			setEffectiveStatus(lookup, EffectiveStatus.ACTIVE);
 			Example<E> example = Example.of(lookup);
 			Optional<E> entityOptional = repository.findOne(example);
 			if (entityOptional.isPresent()) {
 				throw new ResourceAlreadyExists();
 			} else {
-				setEffectiveStatus(request, EffectiveStatus.A);
+				setEffectiveStatus(request, EffectiveStatus.ACTIVE);
 				E createdEntity = repository.save(request);
 				JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, createdEntity);
 				return response;
@@ -57,25 +57,25 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 		Optional<E> entityOptional = repository.findById(key);
 		if (entityOptional.isPresent()) {
 			E old = entityOptional.get();
-			setEffectiveStatus(old, EffectiveStatus.I);
+			setEffectiveStatus(old, EffectiveStatus.INACTIVE);
 			repository.save(old);
 		}
-		setEffectiveStatus(request, EffectiveStatus.A);
+		setEffectiveStatus(request, EffectiveStatus.ACTIVE);
 		E updatedEntity = repository.save(request);
 		JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, updatedEntity);
 		return response;
 	}
 
 	public JSONResponse<E> putEntityByExample(E request, E filters) {
-		setEffectiveStatus(filters, EffectiveStatus.A);
+		setEffectiveStatus(filters, EffectiveStatus.ACTIVE);
 		Example<E> example = Example.of(filters);
 		Optional<E> entityOptional = repository.findOne(example);
 		if (entityOptional.isPresent()) {
 			E old = entityOptional.get();
-			setEffectiveStatus(old, EffectiveStatus.I);
+			setEffectiveStatus(old, EffectiveStatus.INACTIVE);
 			repository.save(old);
 		}
-		setEffectiveStatus(request, EffectiveStatus.A);
+		setEffectiveStatus(request, EffectiveStatus.ACTIVE);
 		E updatedEntity = repository.save(request);
 		JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, updatedEntity);
 		return response;
@@ -93,7 +93,7 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 	}
 
 	public JSONResponse<E> findEntityByExample(E filters) {
-		setEffectiveStatus(filters, EffectiveStatus.A);
+		setEffectiveStatus(filters, EffectiveStatus.ACTIVE);
 		Example<E> example = Example.of(filters);
 		Optional<E> entityOptional = repository.findOne(example);
 		if (entityOptional.isPresent()) {
@@ -106,7 +106,7 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 
 	public JSONResponse<List<E>> listEntities() {
 		E request = getEntityInstance();
-		setEffectiveStatus(request, EffectiveStatus.A);
+		setEffectiveStatus(request, EffectiveStatus.ACTIVE);
 		Example<E> example = Example.of(request);
 		List<E> entities = repository.findAll(example);
 		JSONResponse<List<E>> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, entities);
@@ -117,7 +117,7 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 		Optional<E> entityOptional = repository.findById(key);
 		if (entityOptional.isPresent()) {
 			E old = entityOptional.get();
-			setEffectiveStatus(old, EffectiveStatus.I);
+			setEffectiveStatus(old, EffectiveStatus.INACTIVE);
 			repository.save(old);
 			JSONResponse<String> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, "");
 			return response;
@@ -127,12 +127,12 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 	}
 
 	public JSONResponse<String> deleteEntityByExample(E filters) {
-		setEffectiveStatus(filters, EffectiveStatus.A);
+		setEffectiveStatus(filters, EffectiveStatus.ACTIVE);
 		Example<E> example = Example.of(filters);
 		Optional<E> entityOptional = repository.findOne(example);
 		if (entityOptional.isPresent()) {
 			E old = entityOptional.get();
-			setEffectiveStatus(old, EffectiveStatus.I);
+			setEffectiveStatus(old, EffectiveStatus.INACTIVE);
 			repository.save(old);
 			JSONResponse<String> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, "");
 			return response;

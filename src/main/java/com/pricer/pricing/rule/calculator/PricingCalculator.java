@@ -61,7 +61,7 @@ public class PricingCalculator {
 				result.setAverageStorePrice(
 						(result.getAverageStorePrice() == null ? 0d : result.getAverageStorePrice()) + p.getStorePrice());
 			});
-
+			if (result.getAverageStorePrice() != null)
 			result.setAverageStorePrice(result.getAverageStorePrice() / countOfPrices);
 			result.setLowestPrice(result.getLowestPrice() == Double.MAX_VALUE ? null : result.getLowestPrice());
 			result.setHighestPrice(result.getHighestPrice() == Double.MIN_VALUE ? null : result.getHighestPrice());
