@@ -52,6 +52,7 @@ public class JobManager {
 		loadQueueOnStartup();
 	}
 
+	// TODO Add chunk processing.
 	private void loadQueueOnStartup() {
 		List<PriceCalculatorEventLog> log = eventLogService.getPendingTheadsInOrder();
 		readerQueue = new LinkedBlockingQueue<>();

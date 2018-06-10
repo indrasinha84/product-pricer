@@ -64,6 +64,7 @@ public class PriceCalculationReader implements Runnable {
 						new PriceCalculationProcessor(productQueue, cdl, pricingCalculator, priceDetailsService)));
 			}
 			threadPool.shutdown();
+
 			try {
 				cdl.await();
 			} catch (InterruptedException e) {
@@ -78,7 +79,6 @@ public class PriceCalculationReader implements Runnable {
 					jobManager.markFailure(eventLog, chunkStartPosition, chunkEndPosition);
 				} catch (ExecutionException e) {
 					LOGGER.error("Fatal error", e.getCause());
-					jobManager.markFailure(eventLog, chunkStartPosition, chunkEndPosition);
 					batchSuccess = false;
 					break;
 
@@ -93,6 +93,8 @@ public class PriceCalculationReader implements Runnable {
 
 			}
 		} else {
+			LOGGER.error("No products to process.");
+
 			jobManager.markComplete(eventLog, chunkStartPosition, chunkEndPosition);
 		}
 		(new Thread(new JobManagerWorker(jobManager))).start();

@@ -7,7 +7,7 @@ import com.pricer.repository.StoreRepository;
 
 @Service("storeCRUDService")
 public class StoreService
-		extends CRUDDataAccessService<Store, Integer, StoreRepository> {
+		extends AbstractCRUDDataAccessService<Store, Integer, StoreRepository> {
 
 	@Override
 	protected void setKey(Store request, Integer key) {

@@ -22,7 +22,7 @@ import com.pricer.rest.exception.SchedulerLoggingException;
 
 @Service
 public class PriceCalculatorEventLogService
-		extends CRUDDataAccessService<PriceCalculatorEventLog, Integer, PriceCalculatorEventLogRepository> {
+		extends AbstractCRUDDataAccessService<PriceCalculatorEventLog, Integer, PriceCalculatorEventLogRepository> {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(PriceCalculatorEventLogService.class);
 

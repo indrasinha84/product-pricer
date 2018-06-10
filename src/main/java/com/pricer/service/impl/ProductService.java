@@ -9,7 +9,7 @@ import com.pricer.repository.ProductRepository;
 
 @Service
 public class ProductService
-		extends CRUDDataAccessService<Product, Integer, ProductRepository> {
+		extends AbstractCRUDDataAccessService<Product, Integer, ProductRepository> {
 
 	@Override
 	protected void setKey(Product request, Integer key) {

@@ -15,7 +15,7 @@ import com.pricer.rest.exception.DependencyPresentException;
 import com.pricer.rest.exception.ResourceNotFoundException;
 import com.pricer.service.DataAccessService;
 
-public abstract class CRUDDataAccessService<E, K, R extends JpaRepository<E, K>>
+public abstract class AbstractCRUDDataAccessService<E, K, R extends JpaRepository<E, K>>
 		implements DataAccessService<E, K, R> {
 
 	@Autowired

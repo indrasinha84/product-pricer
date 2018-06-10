@@ -23,7 +23,7 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 	@Autowired
 	R repository;
 
-	//Add Logger everywhere
+	// TODO Add Logger everywhere
 	private static Logger LOGGER = LoggerFactory.getLogger(AbstractSoftDataAccessService.class);
 
 	protected abstract void setEffectiveStatus(E entity, EffectiveStatus effectiveStatus);
@@ -34,20 +34,19 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 
 	public JSONResponse<E> addEntity(E request) {
 		try {
-		E lookup = setNaturalKey(request);
-		setEffectiveStatus(lookup, EffectiveStatus.A);
-		Example<E> example = Example.of(lookup);
-		Optional<E> entityOptional = repository.findOne(example);
-		if (entityOptional.isPresent()) {
-			throw new ResourceAlreadyExists();
-		} else {
-			setEffectiveStatus(request, EffectiveStatus.A);
-			E createdEntity = repository.save(request);
-			JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, createdEntity);
-			return response;
-		}
-		}
-		catch(Exception e) {
+			E lookup = setNaturalKey(request);
+			setEffectiveStatus(lookup, EffectiveStatus.A);
+			Example<E> example = Example.of(lookup);
+			Optional<E> entityOptional = repository.findOne(example);
+			if (entityOptional.isPresent()) {
+				throw new ResourceAlreadyExists();
+			} else {
+				setEffectiveStatus(request, EffectiveStatus.A);
+				E createdEntity = repository.save(request);
+				JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, createdEntity);
+				return response;
+			}
+		} catch (Exception e) {
 			LOGGER.error("addEntity failed.", e);
 			throw e;
 		}
