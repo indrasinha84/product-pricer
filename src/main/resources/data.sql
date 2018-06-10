@@ -53,14 +53,12 @@ CREATE TABLE price_details_log
      details_id          INTEGER PRIMARY KEY, 
      product_id          INTEGER, 
      average_store_price NUMERIC, 
-     lowest_price_id     NUMERIC, 
-     highest_price_id    NUMERIC, 
+     lowest_price        NUMERIC, 
+     highest_price       NUMERIC, 
      ideal_store_price   NUMERIC, 
      count_of_prices     INTEGER, 
      eff_sts			 VARCHAR(20),
-     created_date        TIMESTAMP, 
-     FOREIGN KEY (lowest_price_id) REFERENCES store_price(store_price_id), 
-     FOREIGN KEY (highest_price_id) REFERENCES store_price(store_price_id), 
+     created_date        TIMESTAMP,
      FOREIGN KEY (product_id) REFERENCES product(product_id) 
   ); 
 
@@ -92,6 +90,6 @@ CREATE UNIQUE INDEX ind1_price_calculation_request
   ON price_calculation_request (calculation_request_id); 
 
 CREATE INDEX ind2_price_calculation_request 
-  ON price_calculation_request (job_sts, details_id_end); 
+  ON price_calculation_request (job_sts, store_price_id_end); 
 
 COMMIT; 

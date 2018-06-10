@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.pricer.model.EffectiveStatus;
 import com.pricer.model.JSONResponse;
 import com.pricer.model.PriceDetails;
+import com.pricer.model.Product;
 import com.pricer.repository.PriceDetailsRepository;
 
 @Service("priceDetailsServiceSoft")
@@ -41,7 +42,7 @@ public class PriceDetailsService extends AbstractSoftDataAccessService<PriceDeta
 		lookup.setProductId(request.getProductId());
 		return lookup;
 	}
-
+	
 	public void addOrReplacePriceDetails(List<PriceDetails> priceDetailsList) {
 		try {
 			List<PriceDetails> toInActive = new LinkedList<>();
@@ -67,5 +68,19 @@ public class PriceDetailsService extends AbstractSoftDataAccessService<PriceDeta
 			throw e;
 		}
 	}
+
+
+	@Override
+	protected PriceDetails copyEntityForDelete(PriceDetails old) {
+		PriceDetails e = getEntityInstance();
+		e.setProductId(old.getProductId());
+		e.setCountOfPrices(0);
+		e.setAverageStorePrice(old.getAverageStorePrice());
+		e.setHighestPrice(old.getHighestPrice());
+		e.setIdealPrice(old.getIdealPrice());
+		e.setLowestPrice(old.getIdealPrice());		
+		return e;
+	}
+
 
 }

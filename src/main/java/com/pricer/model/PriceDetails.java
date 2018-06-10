@@ -138,7 +138,7 @@ public class PriceDetails implements Serializable {
 		this.averageStorePrice = averageStorePrice;
 	}
 
-	@Column(name = "LOWEST_PRICE_ID", nullable = false)
+	@Column(name = "LOWEST_PRICE", nullable = false)
 	@JsonProperty(value = "lowestPrice", access = Access.READ_ONLY)
 	public Double getLowestPrice() {
 		return lowestPrice;
@@ -148,7 +148,7 @@ public class PriceDetails implements Serializable {
 		this.lowestPrice = lowestPrice;
 	}
 
-	@Column(name = "HIGHEST_PRICE_ID", nullable = false)
+	@Column(name = "HIGHEST_PRICE", nullable = false)
 	@JsonProperty(value = "highestPrice", access = Access.READ_ONLY)
 	public Double getHighestPrice() {
 		return highestPrice;

@@ -119,6 +119,10 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 			E old = entityOptional.get();
 			setEffectiveStatus(old, EffectiveStatus.INACTIVE);
 			repository.save(old);
+
+			E deletedRow = copyEntityForDelete(old);
+			setEffectiveStatus(deletedRow, EffectiveStatus.DELETED);
+			repository.save(deletedRow);
 			JSONResponse<String> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, "");
 			return response;
 		} else {
@@ -134,10 +138,16 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 			E old = entityOptional.get();
 			setEffectiveStatus(old, EffectiveStatus.INACTIVE);
 			repository.save(old);
+
+			E deletedRow = copyEntityForDelete(old);
+			setEffectiveStatus(deletedRow, EffectiveStatus.DELETED);
+			repository.save(deletedRow);
 			JSONResponse<String> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, "");
 			return response;
 		} else {
 			throw new ResourceNotFoundException();
 		}
 	}
+
+	protected abstract E copyEntityForDelete(E old);
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.pricer.model.EffectiveStatus;
 import com.pricer.model.JSONResponse;
 import com.pricer.model.MarketPrice;
+import com.pricer.model.PriceDetails;
 import com.pricer.repository.MarketPriceRepository;
 
 @Service
@@ -38,8 +39,9 @@ public class MarketPriceService extends AbstractSoftDataAccessService<MarketPric
 	}
 
 	public JSONResponse<String> deleteMarketPrice(Integer store, Integer product) {
-		//TODO.. In case of delete insert a row with D. If possible do changes in 
-		// AbstractSoftDataAccessService .. Change eff_sts to 20 character 
+		// TODO.. In case of delete insert a row with D. If possible do changes
+		// in
+		// AbstractSoftDataAccessService .. Change eff_sts to 20 character
 		MarketPrice request = getEntityInstance();
 		request.setStoreId(store);
 		request.setProductId(product);
@@ -54,4 +56,15 @@ public class MarketPriceService extends AbstractSoftDataAccessService<MarketPric
 		marketPrice.setProductId(product);
 		return putEntityByExample(marketPrice, filters);
 	}
+
+	@Override
+	protected MarketPrice copyEntityForDelete(MarketPrice old) {
+		MarketPrice e = getEntityInstance();
+		e.setProductId(old.getProductId());
+		e.setStoreId(old.getStoreId());
+		e.setNotes(old.getNotes());
+		e.setStorePrice(old.getStorePrice());
+		return e;
+	}
+
 }
