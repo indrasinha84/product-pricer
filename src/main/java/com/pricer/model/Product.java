@@ -3,6 +3,7 @@ package com.pricer.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -110,10 +112,17 @@ public class Product implements Serializable {
 		this.createdDate = createdDate;
 	}
 
-	@OneToMany(mappedBy = "product", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
 	@JsonIgnore
 	public Set<MarketPrice> getMarketPrices() {
 		return marketPrices;
+	}
+
+	@JsonIgnore
+	@Transient
+	public Set<MarketPrice> getActiveMarketPrices() {
+		return marketPrices.stream().filter(p -> EffectiveStatus.A.equals(p.getEffectiveStatus()))
+				.collect(Collectors.toSet());
 	}
 
 	public void setMarketPrices(Set<MarketPrice> marketPrices) {

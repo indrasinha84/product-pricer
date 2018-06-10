@@ -21,7 +21,7 @@ public class SchedulingController {
 	@Autowired
 	PriceCalculatorEventLogService priceCalculatorEventLogService;
 
-	@PostMapping(path = "/pricecalculator", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(path = "/pricecalculator", consumes = MediaType.ALL_VALUE)
 	public @ResponseBody JSONResponse<SchedulerResponse> priceCalculator(@RequestParam String command) {
 		try {
 			if (Command.START.value().equals(command))

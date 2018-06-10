@@ -1,9 +1,12 @@
 package com.pricer.pricing.rule.impl;
 
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
+import com.pricer.model.MarketPrice;
 import com.pricer.model.Product;
 import com.pricer.pricing.rule.IdealPricingRule;
 
@@ -13,11 +16,14 @@ public class SimpleIdealPricingRule implements IdealPricingRule {
 	@Override
 	public Double getIdealPrice(Product product) {
 		Double idealPrice = null;
-
-		if (product != null && product.getMarketPrices() != null && !product.getMarketPrices().isEmpty()
-				&& product.getMarketPrices().size() > 4) {
-			Double average = product.getMarketPrices().stream().map(p -> p.getStorePrice()).sorted()
-					.collect(Collectors.toList()).subList(2, product.getMarketPrices().size() - 3).stream()
+		Set<MarketPrice>  activeMarketPrices = null;
+		if (product != null) {
+			activeMarketPrices = product.getActiveMarketPrices() ;
+		}
+		if (activeMarketPrices != null && !activeMarketPrices.isEmpty()
+				&& activeMarketPrices.size() > 4) {
+			Double average = activeMarketPrices.stream().map(p -> p.getStorePrice()).sorted()
+					.collect(Collectors.toList()).subList(2, activeMarketPrices.size() - 2).stream()
 					.collect(Collectors.averagingDouble(p -> p)).doubleValue();
 			idealPrice = average * 1.2;
 
