@@ -3,6 +3,9 @@ package com.pricer.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.NonUniqueResultException;
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,27 +34,32 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 
 	protected abstract E setNaturalKey(E request);
 
+	@Transactional
 	public JSONResponse<E> addEntity(E request) {
 		try {
+			setEffectiveStatus(request, EffectiveStatus.ACTIVE);
+			E createdEntity = repository.save(request);
+			JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, createdEntity);
+
 			E lookup = setNaturalKey(request);
 			setEffectiveStatus(lookup, EffectiveStatus.ACTIVE);
 			Example<E> example = Example.of(lookup);
-			Optional<E> entityOptional = repository.findOne(example);
-			if (entityOptional.isPresent()) {
-				throw new ResourceAlreadyExists();
-			} else {
-				setEffectiveStatus(request, EffectiveStatus.ACTIVE);
-				E createdEntity = repository.save(request);
-				JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, createdEntity);
-				return response;
-			}
-		} catch (Exception e) {
-			LOGGER.error("addEntity failed.", e);
+			repository.findOne(example);
+			
+			return response;
+		} catch (NonUniqueResultException e) {
+			LOGGER.error("NonUniqueResultException addEntity failed.", e);
+			throw new ResourceAlreadyExists();
+		}
+
+		catch (Exception e) {
+			LOGGER.error("addEntity ty failed.", e);
 			throw e;
 		}
 
 	}
 
+	@Transactional
 	public JSONResponse<E> putEntity(E request, K key) {
 		try {
 			Optional<E> entityOptional = repository.findById(key);
@@ -63,6 +71,12 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 			setEffectiveStatus(request, EffectiveStatus.ACTIVE);
 			E updatedEntity = repository.save(request);
 			JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, updatedEntity);
+			
+			E lookup = setNaturalKey(request);
+			setEffectiveStatus(lookup, EffectiveStatus.ACTIVE);
+			Example<E> example = Example.of(lookup);
+			repository.findOne(example);
+			
 			return response;
 		} catch (Exception e) {
 			LOGGER.error("putEntity failed.", e);
@@ -70,19 +84,27 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 		}
 	}
 
+	@Transactional
 	public JSONResponse<E> putEntityByExample(E request, E filters) {
 		try {
 			setEffectiveStatus(filters, EffectiveStatus.ACTIVE);
 			Example<E> example = Example.of(filters);
-			Optional<E> entityOptional = repository.findOne(example);
+ 			Optional<E> entityOptional = repository.findOne(example);
 			if (entityOptional.isPresent()) {
 				E old = entityOptional.get();
 				setEffectiveStatus(old, EffectiveStatus.INACTIVE);
 				repository.save(old);
 			}
 			setEffectiveStatus(request, EffectiveStatus.ACTIVE);
-			E updatedEntity = repository.save(request);
+			E updatedEntity =  repository.save(request);
+
 			JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, updatedEntity);
+			
+			E lookup = setNaturalKey(request);
+			setEffectiveStatus(lookup, EffectiveStatus.ACTIVE);
+			example = Example.of(lookup);
+			repository.findOne(example);
+			
 			return response;
 		} catch (Exception e) {
 			LOGGER.error("putEntityByExample failed.", e);
@@ -137,6 +159,7 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 		}
 	}
 
+	@Transactional
 	public JSONResponse<String> deleteEntity(K key) {
 		try {
 			Optional<E> entityOptional = repository.findById(key);
@@ -149,6 +172,14 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 				setEffectiveStatus(deletedRow, EffectiveStatus.DELETED);
 				repository.save(deletedRow);
 				JSONResponse<String> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, "");
+				
+				E lookup = setNaturalKey(old);
+				setEffectiveStatus(lookup, EffectiveStatus.ACTIVE);
+				Example<E> example = Example.of(lookup);
+				if(repository.count(example) != 0) {
+					throw new RuntimeException();
+				}			
+				
 				return response;
 			} else {
 				throw new ResourceNotFoundException();
@@ -159,6 +190,7 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 		}
 	}
 
+	@Transactional
 	public JSONResponse<String> deleteEntityByExample(E filters) {
 		try {
 			setEffectiveStatus(filters, EffectiveStatus.ACTIVE);
@@ -173,6 +205,14 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 				setEffectiveStatus(deletedRow, EffectiveStatus.DELETED);
 				repository.save(deletedRow);
 				JSONResponse<String> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, "");
+				
+				E lookup = setNaturalKey(old);
+				setEffectiveStatus(lookup, EffectiveStatus.ACTIVE);
+				example = Example.of(lookup);
+				if(repository.count(example) != 0) {
+					throw new RuntimeException();
+				}
+				
 				return response;
 			} else {
 				throw new ResourceNotFoundException();

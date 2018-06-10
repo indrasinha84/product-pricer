@@ -1,5 +1,6 @@
 package com.pricer.service.impl;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -46,6 +47,7 @@ public class MarketPriceService extends AbstractSoftDataAccessService<MarketPric
 		}
 	}
 
+	@Transactional
 	public JSONResponse<String> deleteMarketPrice(Integer store, Integer product) {
 		try {
 			MarketPrice request = getEntityInstance();
@@ -58,6 +60,7 @@ public class MarketPriceService extends AbstractSoftDataAccessService<MarketPric
 		}
 	}
 
+	@Transactional
 	public JSONResponse<MarketPrice> putEntity(@Valid MarketPrice marketPrice, Integer store, Integer product) {
 		try {
 			MarketPrice filters = getEntityInstance();

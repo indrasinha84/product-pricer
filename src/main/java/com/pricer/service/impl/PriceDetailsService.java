@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
@@ -45,6 +47,7 @@ public class PriceDetailsService extends AbstractSoftDataAccessService<PriceDeta
 		return lookup;
 	}
 
+	@Transactional
 	public List<JSONResponse<PriceDetails>> addOrReplacePriceDetails(List<PriceDetails> priceDetailsList) {
 		try {
 			List<PriceDetails> toInActive = new LinkedList<>();
@@ -65,8 +68,15 @@ public class PriceDetailsService extends AbstractSoftDataAccessService<PriceDeta
 			});
 			toInActive.addAll(toActive);
 			repository.saveAll(toInActive);
-			List<JSONResponse<PriceDetails>> response = toActive.stream()
-					.map(p -> new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, p)).collect(Collectors.toList());
+			List<JSONResponse<PriceDetails>> response = 
+			toActive.stream().map(p -> {
+			PriceDetails l = setNaturalKey(p);
+			setEffectiveStatus(l, EffectiveStatus.ACTIVE);
+			Example<PriceDetails>  e = Example.of(l);
+			Optional<PriceDetails> op = repository.findOne(e);
+			return new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, op.get());
+			}).collect(Collectors.toList());
+			
 			return response;
 		} catch (Exception e) {
 			LOGGER.error("addOrReplacePriceDetails failed.", e);

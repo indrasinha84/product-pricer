@@ -3,6 +3,8 @@ package com.pricer.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public abstract class AbstractCRUDDataAccessService<E, K, R extends JpaRepositor
 
 	protected abstract void setKey(E request, K key);
 
+	
+	
+	@Transactional
 	public JSONResponse<E> addEntity(E request) {
 		try {
 			E createdEntity = repository.save(request);
@@ -38,6 +43,7 @@ public abstract class AbstractCRUDDataAccessService<E, K, R extends JpaRepositor
 		}
 	}
 
+	@Transactional
 	public JSONResponse<E> putEntity(E request, K key) {
 		try {
 			setKey(request, key);
@@ -50,6 +56,7 @@ public abstract class AbstractCRUDDataAccessService<E, K, R extends JpaRepositor
 		}
 	}
 
+	@Transactional
 	public JSONResponse<E> putEntityByExample(E request, E filters) {
 		try {
 			E updatedEntity = repository.save(request);
@@ -61,6 +68,7 @@ public abstract class AbstractCRUDDataAccessService<E, K, R extends JpaRepositor
 		}
 	}
 
+	
 	public JSONResponse<E> findEntity(K key) {
 		try {
 			Optional<E> entityOptional = repository.findById(key);
@@ -98,6 +106,7 @@ public abstract class AbstractCRUDDataAccessService<E, K, R extends JpaRepositor
 		return response;
 	}
 
+	@Transactional
 	public JSONResponse<String> deleteEntity(K key) {
 		try {
 			Optional<E> entityOptional = repository.findById(key);
@@ -117,6 +126,7 @@ public abstract class AbstractCRUDDataAccessService<E, K, R extends JpaRepositor
 
 	}
 
+	@Transactional
 	public JSONResponse<String> deleteEntityByExample(E request) {
 		try {
 			Example<E> example = Example.of(request);
