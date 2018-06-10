@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -47,7 +48,7 @@ public class Product implements Serializable {
 	private String description;
 	private Double basePrice;
 	private Date createdDate;
-	private Set<MarketPrice> storePrice;
+	private Set<MarketPrice> marketPrices;
 	private Set<PriceDetails> priceDetails;
 
 	@Id
@@ -109,14 +110,14 @@ public class Product implements Serializable {
 		this.createdDate = createdDate;
 	}
 
-	@OneToMany(mappedBy = "product")
+	@OneToMany(mappedBy = "product", fetch=FetchType.EAGER)
 	@JsonIgnore
-	public Set<MarketPrice> getStorePrice() {
-		return storePrice;
+	public Set<MarketPrice> getMarketPrices() {
+		return marketPrices;
 	}
 
-	public void setStorePrice(Set<MarketPrice> storePrice) {
-		this.storePrice = storePrice;
+	public void setMarketPrices(Set<MarketPrice> marketPrices) {
+		this.marketPrices = marketPrices;
 	}
 
 	@OneToMany(mappedBy = "product")

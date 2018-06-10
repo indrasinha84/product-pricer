@@ -30,5 +30,14 @@ public class PriceDetailsService extends AbstractSoftDataAccessService<PriceDeta
 	protected PriceDetails setNaturalKey(PriceDetails request) {
 		PriceDetails lookup = getEntityInstance();
 		lookup.setProductId(request.getProductId());
-		return lookup;	}
+		return lookup;
+	}
+
+	public void addOrReplacePriceDetails(PriceDetails priceDetails) {
+		PriceDetails filters = setNaturalKey(priceDetails);
+		putEntityByExample(priceDetails, filters);
+
+	}
+	
+	
 }

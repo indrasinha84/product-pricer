@@ -3,6 +3,8 @@ package com.pricer.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,6 +23,9 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 	@Autowired
 	R repository;
 
+	//Add Logger everywhere
+	private static Logger LOGGER = LoggerFactory.getLogger(AbstractSoftDataAccessService.class);
+
 	protected abstract void setEffectiveStatus(E entity, EffectiveStatus effectiveStatus);
 
 	protected abstract E getEntityInstance();
@@ -28,6 +33,7 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 	protected abstract E setNaturalKey(E request);
 
 	public JSONResponse<E> addEntity(E request) {
+		try {
 		E lookup = setNaturalKey(request);
 		setEffectiveStatus(lookup, EffectiveStatus.A);
 		Example<E> example = Example.of(lookup);
@@ -39,6 +45,11 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 			E createdEntity = repository.save(request);
 			JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, createdEntity);
 			return response;
+		}
+		}
+		catch(Exception e) {
+			LOGGER.error("addEntity failed.", e);
+			throw e;
 		}
 
 	}

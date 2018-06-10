@@ -7,23 +7,24 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import com.pricer.service.impl.ProductService;
+import com.pricer.batch.core.JobManager;
+import com.pricer.batch.core.JobManagerWorker;
 
 @SpringBootApplication
 @EnableJpaAuditing
 @EnableScheduling
 public class ProductPricerApplication implements CommandLineRunner {
-	
-	@Autowired
-	ProductService product;
-
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProductPricerApplication.class, args);
 	}
 
+	@Autowired
+	JobManager jobManager;
+
 	@Override
 	public void run(String... args) throws Exception {
-//		product.getProducts();
+		// Start batch thread.
+		(new Thread(new JobManagerWorker(jobManager))).start();
 	}
 }

@@ -54,7 +54,7 @@ public class PriceCalculatorEventLog implements Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "DETAILS_ID_START", nullable = false, updatable = false)
+	@Column(name = "STORE_PRICE_ID_START", nullable = false, updatable = false)
 	public Integer getStartPosition() {
 		return startPosition;
 	}
@@ -63,7 +63,7 @@ public class PriceCalculatorEventLog implements Serializable {
 		this.startPosition = startPosition;
 	}
 
-	@Column(name = "DETAILS_ID_END", nullable = false, updatable = false)
+	@Column(name = "STORE_PRICE_ID_END", nullable = false, updatable = false)
 	public Integer getEndPosition() {
 		return endPosition;
 	}
@@ -113,7 +113,7 @@ public class PriceCalculatorEventLog implements Serializable {
 		this.status = status;
 	}
 
-	@Column(name = "DETAILS_ID_RESTART")
+	@Column(name = "STORE_PRICE_ID_RESTART")
 	public Integer getRestartPosition() {
 		return restartPosition;
 	}

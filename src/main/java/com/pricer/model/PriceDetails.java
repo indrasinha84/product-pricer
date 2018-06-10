@@ -43,6 +43,22 @@ public class PriceDetails implements Serializable {
 	 */
 	private static final long serialVersionUID = -8927107845256199307L;
 
+	
+	public PriceDetails() {
+		
+	}
+	
+	public PriceDetails(Product product, Double averageStorePrice, Double lowestPrice, Double highestPrice,
+			Double idealPrice, Integer countOfPrices) {
+		super();
+		this.product = product;
+		this.averageStorePrice = averageStorePrice;
+		this.lowestPrice = lowestPrice;
+		this.highestPrice = highestPrice;
+		this.idealPrice = idealPrice;
+		this.countOfPrices = countOfPrices;
+	}
+
 	private Integer id;
 	private Product product;
 	private Double averageStorePrice;
@@ -100,7 +116,6 @@ public class PriceDetails implements Serializable {
 	}
 	
 	@JsonProperty(value="description", access = Access.READ_ONLY)
-	@NotNull
 	@Transient
 	@Size(max = 1000)
 	public String getProductDescription() {
@@ -115,7 +130,6 @@ public class PriceDetails implements Serializable {
 
 	@Column(name = "AVERAGE_STORE_PRICE")
 	@JsonProperty(value = "averagePrice", access = Access.READ_ONLY)
-	@NotNull
 	public Double getAverageStorePrice() {
 		return averageStorePrice;
 	}
@@ -126,7 +140,6 @@ public class PriceDetails implements Serializable {
 
 	@Column(name = "LOWEST_PRICE_ID", nullable = false)
 	@JsonProperty(value = "lowestPrice", access = Access.READ_ONLY)
-	@NotNull
 	public Double getLowestPrice() {
 		return lowestPrice;
 	}
@@ -137,7 +150,6 @@ public class PriceDetails implements Serializable {
 
 	@Column(name = "HIGHEST_PRICE_ID", nullable = false)
 	@JsonProperty(value = "highestPrice", access = Access.READ_ONLY)
-	@NotNull
 	public Double getHighestPrice() {
 		return highestPrice;
 	}
@@ -148,7 +160,6 @@ public class PriceDetails implements Serializable {
 
 	@Column(name = "IDEAL_STORE_PRICE")
 	@JsonProperty(value = "idealPrice", access = Access.READ_ONLY)
-	@NotNull
 	public Double getIdealPrice() {
 		return idealPrice;
 	}

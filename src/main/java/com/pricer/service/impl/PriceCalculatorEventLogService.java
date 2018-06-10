@@ -1,6 +1,7 @@
 package com.pricer.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.pricer.batch.core.JobManager;
 import com.pricer.model.EventType;
 import com.pricer.model.JSONResponse;
 import com.pricer.model.JobStatus;
@@ -23,6 +25,9 @@ public class PriceCalculatorEventLogService
 		extends CRUDDataAccessService<PriceCalculatorEventLog, Integer, PriceCalculatorEventLogRepository> {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(PriceCalculatorEventLogService.class);
+
+	@Autowired
+	JobManager jobManager;
 
 	@Autowired
 	MarketPriceRepository marketPriceRepository;
@@ -43,7 +48,7 @@ public class PriceCalculatorEventLogService
 
 			} else {
 				Integer maxLoggedValue = repository.getMaxLoggedPosition();
-				startPosition = maxLoggedValue == null ? 1 : maxLoggedValue +1;
+				startPosition = maxLoggedValue == null ? 1 : maxLoggedValue + 1;
 			}
 			Integer endPosition = marketPriceRepository.getMaxPriceCollected();
 			endPosition = endPosition == null ? 0 : endPosition;
@@ -59,7 +64,7 @@ public class PriceCalculatorEventLogService
 			JSONResponse<PriceCalculatorEventLog> response = addEntity(request);
 			if (response != null && response.getStatus() != null && HttpStatus.OK.value() == response.getStatus()
 					&& response.getPayload() != null && response.getPayload().getRequestedDate() != null) {
-
+				jobManager.publishEventToQueue(response.getPayload());
 				responseEntity.setJob(response.getPayload().getId().toString());
 				responseEntity.setStarted(response.getPayload().getRequestedDate());
 				return new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, responseEntity);
@@ -72,6 +77,25 @@ public class PriceCalculatorEventLogService
 			throw new SchedulerLoggingException();
 		}
 
+	}
+
+	public List<PriceCalculatorEventLog> getPendingTheadsInOrder() {
+		return repository.getPendingTheadsInOrder();
+	}
+
+	public void updateEventLogOnCompletion(PriceCalculatorEventLog eventLog, Integer chunkStartPosition,
+			Integer chunkEndPosition) {
+		eventLog.setRestartPosition(chunkEndPosition);
+		if (chunkEndPosition >= eventLog.getEndPosition()) {
+			eventLog.setStatus(JobStatus.COMPLETED);
+		}
+		repository.save(eventLog);
+	}
+
+	public void updateEventLogOnFailure(PriceCalculatorEventLog eventLog, Integer chunkStartPosition,
+			Integer chunkEndPosition) {
+		eventLog.setStatus(JobStatus.FAILED);
+		repository.save(eventLog);
 	}
 
 }

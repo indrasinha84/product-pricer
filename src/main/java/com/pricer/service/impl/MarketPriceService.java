@@ -38,6 +38,8 @@ public class MarketPriceService extends AbstractSoftDataAccessService<MarketPric
 	}
 
 	public JSONResponse<String> deleteMarketPrice(Integer store, Integer product) {
+		//TODO.. In case of delete insert a row with D. If possible do changes in 
+		// AbstractSoftDataAccessService .. Change eff_sts to 20 character 
 		MarketPrice request = getEntityInstance();
 		request.setStoreId(store);
 		request.setProductId(product);

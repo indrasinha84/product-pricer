@@ -69,18 +69,18 @@ CREATE SEQUENCE seq_price_details_log START WITH 1 INCREMENT BY 1;
 CREATE UNIQUE INDEX ind1_price_details_log 
   ON price_details_log (details_id); 
 
-CREATE UNIQUE INDEX ind2_price_details_log 
+CREATE INDEX ind2_price_details_log 
   ON price_details_log (product_id, eff_sts); 
   
 CREATE TABLE price_calculation_request 
   ( 
      calculation_request_id INTEGER UNIQUE, 
-     details_id_start       INTEGER, 
-     details_id_end         INTEGER, 
+     store_price_id_start       INTEGER, 
+     store_price_id_end         INTEGER, 
      requested_date         TIMESTAMP, 
      start_date             TIMESTAMP, 
      end_date               TIMESTAMP,
-     details_id_restart     INTEGER,
+     store_price_id_restart     INTEGER,
 	 event_type 			VARCHAR(50),
      job_sts                VARCHAR(50)
 
