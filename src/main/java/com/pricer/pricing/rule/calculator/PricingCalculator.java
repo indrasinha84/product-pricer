@@ -15,7 +15,7 @@ import com.pricer.pricing.rule.IdealPricingRule;
 
 @Component
 public class PricingCalculator {
-//TODO Create Strategy for PricingCalculator
+
 	private static Logger LOGGER = LoggerFactory.getLogger(PricingCalculator.class);
 
 	public IdealPricingRule getIdealPricingRule() {
