@@ -3,11 +3,13 @@ package com.pricer.controller;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pricer.model.JSONResponse;
 import com.pricer.model.PriceDetails;
 import com.pricer.model.Product;
+import com.pricer.model.RESTMessage;
 import com.pricer.repository.ProductRepository;
 import com.pricer.rest.exception.IdNotAllowedException;
 import com.pricer.rest.exception.ResourceListingException;
@@ -30,14 +33,15 @@ import com.pricer.rest.exception.ResourceNotCreatedException;
 import com.pricer.rest.exception.ResourceNotDeletedException;
 import com.pricer.rest.exception.ResourceNotFoundException;
 import com.pricer.service.DataAccessService;
-import com.pricer.service.impl.PriceDetailsService;
+import com.pricer.service.impl.PriceDetailsCacheService;
 
 @RestController
 @RequestMapping("/product")
 public class ProductController {
 
 	@Autowired
-	PriceDetailsService priceDetailsService;
+	@Resource(name = "priceDetailsCacheService")
+	PriceDetailsCacheService priceDetailsService;
 
 	@Autowired
 	DataAccessService<Product, Integer, ProductRepository> productService;

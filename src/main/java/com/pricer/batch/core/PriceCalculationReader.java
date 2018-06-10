@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.pricer.model.PriceCalculatorEventLog;
 import com.pricer.model.Product;
 import com.pricer.pricing.rule.calculator.PricingCalculator;
+import com.pricer.service.impl.PriceDetailsCacheService;
 import com.pricer.service.impl.PriceDetailsService;
 import com.pricer.service.impl.ProductService;
 
@@ -36,9 +37,12 @@ public class PriceCalculationReader implements Runnable {
 
 	JobManager jobManager;
 
+	private PriceDetailsCacheService priceDetailsCacheService;
+
 	public PriceCalculationReader(ProductService productService, JobManager jobManager,
 			PriceCalculatorEventLog eventLog, Integer chunkStartPosition, Integer chunkEndPosition, Integer poolSize,
-			PricingCalculator pricingCalculator, PriceDetailsService priceDetailsService) {
+			PricingCalculator pricingCalculator, PriceDetailsService priceDetailsService,
+			PriceDetailsCacheService priceDetailsCacheService) {
 		super();
 		this.eventLog = eventLog;
 		this.chunkStartPosition = chunkStartPosition;
@@ -48,7 +52,7 @@ public class PriceCalculationReader implements Runnable {
 		this.poolSize = poolSize;
 		this.pricingCalculator = pricingCalculator;
 		this.priceDetailsService = priceDetailsService;
-
+		this.priceDetailsCacheService = priceDetailsCacheService;
 	}
 
 	@Override
@@ -60,8 +64,8 @@ public class PriceCalculationReader implements Runnable {
 			CountDownLatch cdl = new CountDownLatch(poolSize);
 			List<Future<Boolean>> futuresList = new ArrayList<>(poolSize);
 			for (int i = 0; i < poolSize; i++) {
-				futuresList.add(threadPool.submit(
-						new PriceCalculationProcessor(productQueue, cdl, pricingCalculator, priceDetailsService)));
+				futuresList.add(threadPool.submit(new PriceCalculationProcessor(productQueue, cdl, pricingCalculator,
+						priceDetailsService, priceDetailsCacheService)));
 			}
 			threadPool.shutdown();
 

@@ -1,4 +1,4 @@
-package com.pricer.controller;
+package com.pricer.model;
 
 public enum Command {
 	START("start"), FULL("fullstart");

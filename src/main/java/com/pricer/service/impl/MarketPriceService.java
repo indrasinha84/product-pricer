@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import com.pricer.model.EffectiveStatus;
 import com.pricer.model.JSONResponse;
 import com.pricer.model.MarketPrice;
-import com.pricer.model.PriceDetails;
 import com.pricer.repository.MarketPriceRepository;
 
 @Service

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import com.pricer.model.PriceCalculatorEventLog;
 import com.pricer.pricing.rule.calculator.PricingCalculator;
 import com.pricer.service.impl.PriceCalculatorEventLogService;
+import com.pricer.service.impl.PriceDetailsCacheService;
 import com.pricer.service.impl.PriceDetailsService;
 import com.pricer.service.impl.ProductService;
 
@@ -38,6 +39,9 @@ public class JobManager {
 
 	@Autowired
 	PriceCalculatorEventLogService eventLogService;
+	
+	@Autowired
+	PriceDetailsCacheService priceDetailsCacheService;
 
 	@Autowired
 	ProductService productService;
@@ -68,7 +72,7 @@ public class JobManager {
 	private PriceCalculationReader createPriceCalculationReader(PriceCalculatorEventLog eventLog,
 			Integer chunkStartPosition, Integer chunkEndPosition) {
 		return new PriceCalculationReader(productService, this, eventLog, chunkStartPosition, chunkEndPosition,
-				poolSize, pricingCalculator, priceDetailsService);
+				poolSize, pricingCalculator, priceDetailsService, priceDetailsCacheService);
 	}
 
 	public void startReader() {

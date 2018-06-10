@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pricer.model.Command;
 import com.pricer.model.EventType;
 import com.pricer.model.JSONResponse;
 import com.pricer.model.SchedulerResponse;

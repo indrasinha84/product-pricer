@@ -9,9 +9,11 @@ import java.util.concurrent.CountDownLatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.pricer.model.JSONResponse;
 import com.pricer.model.PriceDetails;
 import com.pricer.model.Product;
 import com.pricer.pricing.rule.calculator.PricingCalculator;
+import com.pricer.service.impl.PriceDetailsCacheService;
 import com.pricer.service.impl.PriceDetailsService;
 
 public class PriceCalculationProcessor implements Callable<Boolean> {
@@ -20,13 +22,16 @@ public class PriceCalculationProcessor implements Callable<Boolean> {
 	CountDownLatch cdl;
 	private PriceDetailsService priceDetailsService;
 	private PricingCalculator pricingCalculator;
+	PriceDetailsCacheService priceDetailsCacheService;
 
 	public PriceCalculationProcessor(Queue<Product> productQueue, CountDownLatch cdl,
-			PricingCalculator pricingCalculator, PriceDetailsService priceDetailsService) {
+			PricingCalculator pricingCalculator, PriceDetailsService priceDetailsService,
+			PriceDetailsCacheService priceDetailsCacheService) {
 		this.productQueue = productQueue;
 		this.cdl = cdl;
 		this.pricingCalculator = pricingCalculator;
 		this.priceDetailsService = priceDetailsService;
+		this.priceDetailsCacheService = priceDetailsCacheService;
 	}
 
 	private static Logger LOGGER = LoggerFactory.getLogger(PriceCalculationProcessor.class);
@@ -42,8 +47,11 @@ public class PriceCalculationProcessor implements Callable<Boolean> {
 				product = productQueue.poll();
 			}
 			if (caculatedPrices.size() != 0) {
-				priceDetailsService.addOrReplacePriceDetails(caculatedPrices);
+				List<JSONResponse<PriceDetails>> priceList = priceDetailsService.addOrReplacePriceDetails(caculatedPrices);
+				putCache(priceList);
+
 			}
+
 			return true;
 
 		} catch (Exception e) {
@@ -52,6 +60,10 @@ public class PriceCalculationProcessor implements Callable<Boolean> {
 		} finally {
 			cdl.countDown();
 		}
+	}
+
+	private void putCache(List<JSONResponse<PriceDetails>> caculatedPrices) {
+		caculatedPrices.stream().forEach(p -> priceDetailsCacheService.putPriceDetails( p.getPayload().getProductId(), p));
 	}
 
 }
