@@ -11,7 +11,6 @@ import com.pricer.model.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
-//TODO Issue with multiple threads writing for same product.
 	@Query("SELECT P FROM Product P WHERE P.id IN (SELECT M.product.id From com.pricer.model.MarketPrice M WHERE M.effectiveStatus != com.pricer.model.EffectiveStatus.INACTIVE "
 			+ " AND M.id BETWEEN :chunkStartPosition AND :chunkEndPosition)")
 	List<Product> getProductsForPriceCalculation(@Param("chunkStartPosition") Integer chunkStartPosition,

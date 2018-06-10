@@ -23,7 +23,6 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 	@Autowired
 	R repository;
 
-	// TODO Add Logger everywhere
 	private static Logger LOGGER = LoggerFactory.getLogger(AbstractSoftDataAccessService.class);
 
 	protected abstract void setEffectiveStatus(E entity, EffectiveStatus effectiveStatus);
@@ -54,98 +53,133 @@ public abstract class AbstractSoftDataAccessService<E, K, R extends JpaRepositor
 	}
 
 	public JSONResponse<E> putEntity(E request, K key) {
-		Optional<E> entityOptional = repository.findById(key);
-		if (entityOptional.isPresent()) {
-			E old = entityOptional.get();
-			setEffectiveStatus(old, EffectiveStatus.INACTIVE);
-			repository.save(old);
+		try {
+			Optional<E> entityOptional = repository.findById(key);
+			if (entityOptional.isPresent()) {
+				E old = entityOptional.get();
+				setEffectiveStatus(old, EffectiveStatus.INACTIVE);
+				repository.save(old);
+			}
+			setEffectiveStatus(request, EffectiveStatus.ACTIVE);
+			E updatedEntity = repository.save(request);
+			JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, updatedEntity);
+			return response;
+		} catch (Exception e) {
+			LOGGER.error("putEntity failed.", e);
+			throw e;
 		}
-		setEffectiveStatus(request, EffectiveStatus.ACTIVE);
-		E updatedEntity = repository.save(request);
-		JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, updatedEntity);
-		return response;
 	}
 
 	public JSONResponse<E> putEntityByExample(E request, E filters) {
-		setEffectiveStatus(filters, EffectiveStatus.ACTIVE);
-		Example<E> example = Example.of(filters);
-		Optional<E> entityOptional = repository.findOne(example);
-		if (entityOptional.isPresent()) {
-			E old = entityOptional.get();
-			setEffectiveStatus(old, EffectiveStatus.INACTIVE);
-			repository.save(old);
+		try {
+			setEffectiveStatus(filters, EffectiveStatus.ACTIVE);
+			Example<E> example = Example.of(filters);
+			Optional<E> entityOptional = repository.findOne(example);
+			if (entityOptional.isPresent()) {
+				E old = entityOptional.get();
+				setEffectiveStatus(old, EffectiveStatus.INACTIVE);
+				repository.save(old);
+			}
+			setEffectiveStatus(request, EffectiveStatus.ACTIVE);
+			E updatedEntity = repository.save(request);
+			JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, updatedEntity);
+			return response;
+		} catch (Exception e) {
+			LOGGER.error("putEntityByExample failed.", e);
+			throw e;
 		}
-		setEffectiveStatus(request, EffectiveStatus.ACTIVE);
-		E updatedEntity = repository.save(request);
-		JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, updatedEntity);
-		return response;
 	}
 
 	public JSONResponse<E> findEntity(K key) {
-		Optional<E> entityOptional = repository.findById(key);
-		if (entityOptional.isPresent()) {
-			JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, entityOptional.get());
-			return response;
+		try {
+			Optional<E> entityOptional = repository.findById(key);
+			if (entityOptional.isPresent()) {
+				JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, entityOptional.get());
+				return response;
 
-		} else {
-			throw new ResourceNotFoundException();
+			} else {
+				throw new ResourceNotFoundException();
+			}
+		} catch (Exception e) {
+			LOGGER.error("findEntity failed.", e);
+			throw e;
 		}
 	}
 
 	public JSONResponse<E> findEntityByExample(E filters) {
-		setEffectiveStatus(filters, EffectiveStatus.ACTIVE);
-		Example<E> example = Example.of(filters);
-		Optional<E> entityOptional = repository.findOne(example);
-		if (entityOptional.isPresent()) {
-			JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, entityOptional.get());
-			return response;
-		} else {
-			throw new ResourceNotFoundException();
+		try {
+			setEffectiveStatus(filters, EffectiveStatus.ACTIVE);
+			Example<E> example = Example.of(filters);
+			Optional<E> entityOptional = repository.findOne(example);
+			if (entityOptional.isPresent()) {
+				JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, entityOptional.get());
+				return response;
+			} else {
+				throw new ResourceNotFoundException();
+			}
+		} catch (Exception e) {
+			LOGGER.error("findEntityByExample failed.", e);
+			throw e;
 		}
 	}
 
 	public JSONResponse<List<E>> listEntities() {
-		E request = getEntityInstance();
-		setEffectiveStatus(request, EffectiveStatus.ACTIVE);
-		Example<E> example = Example.of(request);
-		List<E> entities = repository.findAll(example);
-		JSONResponse<List<E>> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, entities);
-		return response;
+		try {
+			E request = getEntityInstance();
+			setEffectiveStatus(request, EffectiveStatus.ACTIVE);
+			Example<E> example = Example.of(request);
+			List<E> entities = repository.findAll(example);
+			JSONResponse<List<E>> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, entities);
+			return response;
+		} catch (Exception e) {
+			LOGGER.error("listEntities failed.", e);
+			throw e;
+		}
 	}
 
 	public JSONResponse<String> deleteEntity(K key) {
-		Optional<E> entityOptional = repository.findById(key);
-		if (entityOptional.isPresent()) {
-			E old = entityOptional.get();
-			setEffectiveStatus(old, EffectiveStatus.INACTIVE);
-			repository.save(old);
+		try {
+			Optional<E> entityOptional = repository.findById(key);
+			if (entityOptional.isPresent()) {
+				E old = entityOptional.get();
+				setEffectiveStatus(old, EffectiveStatus.INACTIVE);
+				repository.save(old);
 
-			E deletedRow = copyEntityForDelete(old);
-			setEffectiveStatus(deletedRow, EffectiveStatus.DELETED);
-			repository.save(deletedRow);
-			JSONResponse<String> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, "");
-			return response;
-		} else {
-			throw new ResourceNotFoundException();
+				E deletedRow = copyEntityForDelete(old);
+				setEffectiveStatus(deletedRow, EffectiveStatus.DELETED);
+				repository.save(deletedRow);
+				JSONResponse<String> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, "");
+				return response;
+			} else {
+				throw new ResourceNotFoundException();
+			}
+		} catch (Exception e) {
+			LOGGER.error("deleteEntity(K key) failed.", e);
+			throw e;
 		}
 	}
 
 	public JSONResponse<String> deleteEntityByExample(E filters) {
-		setEffectiveStatus(filters, EffectiveStatus.ACTIVE);
-		Example<E> example = Example.of(filters);
-		Optional<E> entityOptional = repository.findOne(example);
-		if (entityOptional.isPresent()) {
-			E old = entityOptional.get();
-			setEffectiveStatus(old, EffectiveStatus.INACTIVE);
-			repository.save(old);
+		try {
+			setEffectiveStatus(filters, EffectiveStatus.ACTIVE);
+			Example<E> example = Example.of(filters);
+			Optional<E> entityOptional = repository.findOne(example);
+			if (entityOptional.isPresent()) {
+				E old = entityOptional.get();
+				setEffectiveStatus(old, EffectiveStatus.INACTIVE);
+				repository.save(old);
 
-			E deletedRow = copyEntityForDelete(old);
-			setEffectiveStatus(deletedRow, EffectiveStatus.DELETED);
-			repository.save(deletedRow);
-			JSONResponse<String> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, "");
-			return response;
-		} else {
-			throw new ResourceNotFoundException();
+				E deletedRow = copyEntityForDelete(old);
+				setEffectiveStatus(deletedRow, EffectiveStatus.DELETED);
+				repository.save(deletedRow);
+				JSONResponse<String> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, "");
+				return response;
+			} else {
+				throw new ResourceNotFoundException();
+			}
+		} catch (Exception e) {
+			LOGGER.error("deleteEntityByExample failed.", e);
+			throw e;
 		}
 	}
 

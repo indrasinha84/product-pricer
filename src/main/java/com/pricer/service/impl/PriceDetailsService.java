@@ -31,7 +31,7 @@ public class PriceDetailsService extends AbstractSoftDataAccessService<PriceDeta
 	protected PriceDetails getEntityInstance() {
 		return new PriceDetails();
 	}
-	
+
 	public JSONResponse<PriceDetails> getPriceDetails(Integer product) {
 		PriceDetails request = getEntityInstance();
 		request.setProductId(product);
@@ -44,7 +44,7 @@ public class PriceDetailsService extends AbstractSoftDataAccessService<PriceDeta
 		lookup.setProductId(request.getProductId());
 		return lookup;
 	}
-	
+
 	public List<JSONResponse<PriceDetails>> addOrReplacePriceDetails(List<PriceDetails> priceDetailsList) {
 		try {
 			List<PriceDetails> toInActive = new LinkedList<>();
@@ -65,15 +65,14 @@ public class PriceDetailsService extends AbstractSoftDataAccessService<PriceDeta
 			});
 			toInActive.addAll(toActive);
 			repository.saveAll(toInActive);
-			List<JSONResponse<PriceDetails>> response =
-			toActive.stream().map(p -> new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, p)).collect(Collectors.toList());			
-			return response;	
+			List<JSONResponse<PriceDetails>> response = toActive.stream()
+					.map(p -> new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, p)).collect(Collectors.toList());
+			return response;
 		} catch (Exception e) {
 			LOGGER.error("addOrReplacePriceDetails failed.", e);
 			throw e;
 		}
 	}
-
 
 	@Override
 	protected PriceDetails copyEntityForDelete(PriceDetails old) {
@@ -83,9 +82,8 @@ public class PriceDetailsService extends AbstractSoftDataAccessService<PriceDeta
 		e.setAverageStorePrice(old.getAverageStorePrice());
 		e.setHighestPrice(old.getHighestPrice());
 		e.setIdealPrice(old.getIdealPrice());
-		e.setLowestPrice(old.getIdealPrice());		
+		e.setLowestPrice(old.getIdealPrice());
 		return e;
 	}
-
 
 }

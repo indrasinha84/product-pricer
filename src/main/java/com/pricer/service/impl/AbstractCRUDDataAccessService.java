@@ -3,6 +3,8 @@ package com.pricer.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Example;
@@ -21,45 +23,72 @@ public abstract class AbstractCRUDDataAccessService<E, K, R extends JpaRepositor
 	@Autowired
 	R repository;
 
+	private static Logger LOGGER = LoggerFactory.getLogger(AbstractCRUDDataAccessService.class);
+
 	protected abstract void setKey(E request, K key);
 
 	public JSONResponse<E> addEntity(E request) {
-		E createdEntity = repository.save(request);
-		JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, createdEntity);
-		return response;
+		try {
+			E createdEntity = repository.save(request);
+			JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, createdEntity);
+			return response;
+		} catch (Exception e) {
+			LOGGER.error("addEntity failed.", e);
+			throw e;
+		}
 	}
 
 	public JSONResponse<E> putEntity(E request, K key) {
-		setKey(request, key);
-		E updatedEntity = repository.save(request);
-		JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, updatedEntity);
-		return response;
+		try {
+			setKey(request, key);
+			E updatedEntity = repository.save(request);
+			JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, updatedEntity);
+			return response;
+		} catch (Exception e) {
+			LOGGER.error("putEntity failed.", e);
+			throw e;
+		}
 	}
 
 	public JSONResponse<E> putEntityByExample(E request, E filters) {
-		E updatedEntity = repository.save(request);
-		JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, updatedEntity);
-		return response;
+		try {
+			E updatedEntity = repository.save(request);
+			JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, updatedEntity);
+			return response;
+		} catch (Exception e) {
+			LOGGER.error("putEntityByExample failed.", e);
+			throw e;
+		}
 	}
 
 	public JSONResponse<E> findEntity(K key) {
-		Optional<E> entityOptional = repository.findById(key);
-		if (entityOptional.isPresent()) {
-			JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, entityOptional.get());
-			return response;
-		} else {
-			throw new ResourceNotFoundException();
+		try {
+			Optional<E> entityOptional = repository.findById(key);
+			if (entityOptional.isPresent()) {
+				JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, entityOptional.get());
+				return response;
+			} else {
+				throw new ResourceNotFoundException();
+			}
+		} catch (Exception e) {
+			LOGGER.error("findEntity failed.", e);
+			throw e;
 		}
 	}
 
 	public JSONResponse<E> findEntityByExample(E request) {
-		Example<E> example = Example.of(request);
-		Optional<E> entityOptional = repository.findOne(example);
-		if (entityOptional.isPresent()) {
-			JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, entityOptional.get());
-			return response;
-		} else {
-			throw new ResourceNotFoundException();
+		try {
+			Example<E> example = Example.of(request);
+			Optional<E> entityOptional = repository.findOne(example);
+			if (entityOptional.isPresent()) {
+				JSONResponse<E> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, entityOptional.get());
+				return response;
+			} else {
+				throw new ResourceNotFoundException();
+			}
+		} catch (Exception e) {
+			LOGGER.error("findEntityByExample failed.", e);
+			throw e;
 		}
 	}
 
@@ -71,28 +100,37 @@ public abstract class AbstractCRUDDataAccessService<E, K, R extends JpaRepositor
 
 	public JSONResponse<String> deleteEntity(K key) {
 		try {
-		Optional<E> entityOptional = repository.findById(key);
-		if (entityOptional.isPresent()) {
-			repository.deleteById(key);
-			JSONResponse<String> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, "");
-			return response;
-		} else {
-			throw new ResourceNotFoundException();
-		}
-		} catch(DataIntegrityViolationException e) {
+			Optional<E> entityOptional = repository.findById(key);
+			if (entityOptional.isPresent()) {
+				repository.deleteById(key);
+				JSONResponse<String> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, "");
+				return response;
+			} else {
+				throw new ResourceNotFoundException();
+			}
+		} catch (DataIntegrityViolationException e) {
 			throw new DependencyPresentException();
+		} catch (Exception e) {
+			LOGGER.error("deleteEntity failed.", e);
+			throw e;
 		}
+
 	}
 
 	public JSONResponse<String> deleteEntityByExample(E request) {
-		Example<E> example = Example.of(request);
-		Optional<E> entityOptional = repository.findOne(example);
-		if (entityOptional.isPresent()) {
-			repository.delete(entityOptional.get());
-			JSONResponse<String> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, "");
-			return response;
-		} else {
-			throw new ResourceNotFoundException();
+		try {
+			Example<E> example = Example.of(request);
+			Optional<E> entityOptional = repository.findOne(example);
+			if (entityOptional.isPresent()) {
+				repository.delete(entityOptional.get());
+				JSONResponse<String> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, "");
+				return response;
+			} else {
+				throw new ResourceNotFoundException();
+			}
+		} catch (Exception e) {
+			LOGGER.error("deleteEntityByExample failed.", e);
+			throw e;
 		}
 	}
 }
