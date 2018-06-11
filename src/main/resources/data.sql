@@ -96,9 +96,15 @@ INSERT INTO store (store_id, store_name, store_description, created_date)
 VALUES (next value for seq_store, 'Test Store', 'Test Store Description', CURRENT_TIMESTAMP);  
   
 INSERT INTO product (product_id, product_name, product_description, base_price, created_date)
-VALUES(next value for seq_product,'Test Product','Test Product Description',50000, TIMESTAMP '2018-06-10 23:34:58.957');
+VALUES(next value for seq_product,'Test Product','Test Product Description',50000, CURRENT_TIMESTAMP);
 
 INSERT INTO store_price (store_price_id, store_id, product_id, product_notes, store_price, eff_sts, created_date)
 VALUES ( next value for seq_store_price, 1, 1, 'Test Market Price', 30000, 'ACTIVE', CURRENT_TIMESTAMP );
+
+INSERT INTO price_calculation_request (calculation_request_id, store_price_id_start, store_price_id_end, requested_date, start_date, end_date, store_price_id_restart, event_type, job_sts )
+VALUES (next value for seq_price_calculation_request, 1, 1, CURRENT_TIMESTAMP, NULL, NULL, NULL, 'FULL', 'REQUESTED');
+
+INSERT INTO price_details_log (details_id,product_id,average_store_price,lowest_price,highest_price,ideal_store_price,count_of_prices,eff_sts,created_date)
+VALUES(1,1,45000,30000,50000,45000,6,'ACTIVE',CURRENT_TIMESTAMP);
 
 COMMIT; 

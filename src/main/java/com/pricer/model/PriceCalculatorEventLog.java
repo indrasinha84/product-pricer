@@ -41,6 +41,22 @@ public class PriceCalculatorEventLog implements Serializable {
 	private Integer restartPosition;
 	private EventType eventType;
 
+	public PriceCalculatorEventLog() {
+	}
+
+	public PriceCalculatorEventLog(Integer startPosition, Integer endPosition, Date requestedDate, Date startDate,
+			Date endDate, JobStatus status, Integer restartPosition, EventType eventType) {
+		super();
+		this.startPosition = startPosition;
+		this.endPosition = endPosition;
+		this.requestedDate = requestedDate;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.status = status;
+		this.restartPosition = restartPosition;
+		this.eventType = eventType;
+	}
+
 	@Id
 	@Column(name = "CALCULATION_REQUEST_ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CALCULATION_REQUEST_ID_GENERATOR")
