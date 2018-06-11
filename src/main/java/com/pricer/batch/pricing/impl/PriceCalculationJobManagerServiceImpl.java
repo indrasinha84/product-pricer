@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.pricer.batch.core.BatchReaderService;
+import com.pricer.batch.core.ChunkManagerService;
 import com.pricer.batch.core.JobManagerService;
 import com.pricer.batch.pricing.tasks.PriceCalculationReader;
 import com.pricer.model.JobStatus;
@@ -37,7 +37,7 @@ public class PriceCalculationJobManagerServiceImpl implements JobManagerService 
 
 	@Autowired
 	@Qualifier("priceCalculationReaderService")
-	BatchReaderService<PriceCalculatorEventLog, Product> priceCalculationReaderService;
+	ChunkManagerService<PriceCalculatorEventLog, Product> priceCalculationReaderService;
 
 	final ReentrantLock lock = new ReentrantLock();
 	Condition batchRuningWaitCondition = lock.newCondition();

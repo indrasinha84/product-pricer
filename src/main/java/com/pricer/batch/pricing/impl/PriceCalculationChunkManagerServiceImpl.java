@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.pricer.batch.core.BatchProcessorService;
-import com.pricer.batch.core.BatchReaderService;
+import com.pricer.batch.core.ChunkManagerService;
 import com.pricer.batch.core.JobManagerService;
 import com.pricer.batch.pricing.tasks.PriceCalculationJobManager;
 import com.pricer.batch.pricing.tasks.PriceCalculationProcessor;
@@ -30,9 +30,9 @@ import com.pricer.service.impl.PriceDetailsService;
 import com.pricer.service.impl.ProductService;
 
 @Component("priceCalculationReaderService")
-public class PriceCalculationReaderServiceImpl implements BatchReaderService<PriceCalculatorEventLog, Product> {
+public class PriceCalculationChunkManagerServiceImpl implements ChunkManagerService<PriceCalculatorEventLog, Product> {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(PriceCalculationReaderServiceImpl.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(PriceCalculationChunkManagerServiceImpl.class);
 
 	@Autowired
 	@Qualifier("defaultPricingJobManager")
