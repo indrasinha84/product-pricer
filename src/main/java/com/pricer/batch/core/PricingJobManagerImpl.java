@@ -9,17 +9,16 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.pricer.model.PriceCalculatorEventLog;
+import com.pricer.model.Product;
 import com.pricer.service.impl.PriceCalculatorEventLogService;
 import com.pricer.service.impl.ProductService;
 
 @Service("defaultPricingJobManager")
-public class JobManagerImpl implements JobManager{
-
-	@Autowired
-	PriceCalculationReader priceCalculationReader;
+public class PricingJobManagerImpl implements JobManager {
 
 	private BlockingQueue<PriceCalculationReader> readerQueue;
 
@@ -31,23 +30,28 @@ public class JobManagerImpl implements JobManager{
 	@Autowired
 	ProductService productService;
 
+	@Autowired
+	@Qualifier("priceCalculationReaderService")
+	BatchReaderService<PriceCalculatorEventLog, Product> priceCalculationReaderService;
+
 	final ReentrantLock lock = new ReentrantLock();
 	Condition batchRuningWaitCondition = lock.newCondition();
 
-	private static Logger LOGGER = LoggerFactory.getLogger(JobManagerImpl.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(PricingJobManagerImpl.class);
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		loadQueueOnStartup();		
+		loadQueueOnStartup();
 	}
-	
+
 	// TODO Add chunk processing.
 	private void loadQueueOnStartup() {
 		List<PriceCalculatorEventLog> log = eventLogService.getPendingTheadsInOrder();
 		readerQueue = new LinkedBlockingQueue<>();
 		log.stream().forEach(p -> {
 			try {
-				readerQueue.put(priceCalculationReader.getInstance(p, p.getStartPosition(), p.getEndPosition()));
+				readerQueue.put(new PriceCalculationReader(priceCalculationReaderService, p, p.getStartPosition(),
+						p.getEndPosition()));
 			} catch (InterruptedException e) {
 				LOGGER.error("Failed on batch startup.", e);
 			}
@@ -72,7 +76,8 @@ public class JobManagerImpl implements JobManager{
 
 	public void publishEventToQueue(PriceCalculatorEventLog p) {
 		try {
-			readerQueue.put(priceCalculationReader.getInstance(p, p.getStartPosition(), p.getEndPosition()));
+			readerQueue.put(new PriceCalculationReader(priceCalculationReaderService, p, p.getStartPosition(),
+					p.getEndPosition()));
 		} catch (InterruptedException e) {
 			LOGGER.error("Failed on event logging into queue.", e);
 		}

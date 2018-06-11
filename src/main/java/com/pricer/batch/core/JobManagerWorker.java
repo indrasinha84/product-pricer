@@ -1,6 +1,5 @@
 package com.pricer.batch.core;import org.springframework.stereotype.Component;
 
-@Component
 public class JobManagerWorker implements Runnable {
 	
 	public JobManagerWorker(JobManager jobManager) {
@@ -14,9 +13,4 @@ public class JobManagerWorker implements Runnable {
 	public void run() {
 		jobManager.startReader();
 	}
-
-//	public JobManagerWorker getInstance() {
-//		return new JobManagerWorker(jobManager) ;
-//	}
-
 }
