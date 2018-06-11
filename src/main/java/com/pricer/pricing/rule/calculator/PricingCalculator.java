@@ -1,6 +1,7 @@
 package com.pricer.pricing.rule.calculator;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.pricer.model.EffectiveStatus;
 import com.pricer.model.MarketPrice;
 import com.pricer.model.PriceDetails;
 import com.pricer.model.Product;
@@ -36,16 +38,16 @@ public class PricingCalculator {
 			// DoubleSummaryStatistics stats =
 			// product.getMarketPrices().stream()
 			// .collect(Collectors.summarizingDouble(MarketPrice::getStorePrice));
-			
-			Set<MarketPrice>  activeMarketPrices = null;
+
+			Set<MarketPrice> activeMarketPrices = null;
 			if (product != null) {
-				activeMarketPrices = product.getActiveMarketPrices() ;
+				activeMarketPrices = getActiveMarketPrices(product.getMarketPrices());
 			}
-			
+
 			Integer countOfPrices = 0;
 			if (activeMarketPrices != null && !activeMarketPrices.isEmpty()) {
 				countOfPrices = activeMarketPrices.size();
-			}					
+			}
 			PriceDetails result = new PriceDetails(product, null, Double.MAX_VALUE, Double.MIN_VALUE, 0d, 0);
 
 			activeMarketPrices.stream().forEach(p -> {
@@ -58,11 +60,11 @@ public class PricingCalculator {
 					result.setLowestPrice(p.getStorePrice());
 				}
 				// Total Price
-				result.setAverageStorePrice(
-						(result.getAverageStorePrice() == null ? 0d : result.getAverageStorePrice()) + p.getStorePrice());
+				result.setAverageStorePrice((result.getAverageStorePrice() == null ? 0d : result.getAverageStorePrice())
+						+ p.getStorePrice());
 			});
 			if (result.getAverageStorePrice() != null)
-			result.setAverageStorePrice(result.getAverageStorePrice() / countOfPrices);
+				result.setAverageStorePrice(result.getAverageStorePrice() / countOfPrices);
 			result.setLowestPrice(result.getLowestPrice() == Double.MAX_VALUE ? null : result.getLowestPrice());
 			result.setHighestPrice(result.getHighestPrice() == Double.MIN_VALUE ? null : result.getHighestPrice());
 
@@ -75,5 +77,10 @@ public class PricingCalculator {
 			LOGGER.error("Price Calculation Failed.", e);
 			throw e;
 		}
+	}
+
+	private Set<MarketPrice> getActiveMarketPrices(Set<MarketPrice> marketPrices) {
+		return marketPrices.stream().filter(p -> EffectiveStatus.ACTIVE.equals(p.getEffectiveStatus()))
+				.collect(Collectors.toSet());
 	}
 }

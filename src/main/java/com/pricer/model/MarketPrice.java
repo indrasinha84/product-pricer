@@ -42,8 +42,17 @@ public class MarketPrice implements Serializable {
 
 	}
 
-	
-	
+	public MarketPrice(Integer id, Integer storeId, Integer productId, String notes, Double storePrice,
+			EffectiveStatus effectiveStatus) {
+		super();
+		this.id = id;
+		this.setStoreId(storeId);
+		this.setProductId(productId);
+		this.notes = notes;
+		this.storePrice = storePrice;
+		this.effectiveStatus = effectiveStatus;
+	}
+
 	public MarketPrice(Integer store, Integer product, String notes, Double storePrice) {
 		super();
 		this.setStoreId(store);
@@ -63,12 +72,12 @@ public class MarketPrice implements Serializable {
 	private String notes;
 	private Double storePrice;
 	private EffectiveStatus effectiveStatus;
-	private Date createdDate;	
-	
+	private Date createdDate;
+
 	@Id
 	@Column(name = "STORE_PRICE_ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STORE_PRICE_ID_GENERATOR")
-	@GenericGenerator(name = "STORE_PRICE_ID_GENERATOR", strategy ="com.pricer.model.id.generator.MarketPriceIdGenerator", parameters = {
+	@GenericGenerator(name = "STORE_PRICE_ID_GENERATOR", strategy = "com.pricer.model.id.generator.MarketPriceIdGenerator", parameters = {
 			@Parameter(name = SequenceStyleGenerator.SEQUENCE_PARAM, value = "SEQ_STORE_PRICE") })
 	@JsonIgnore
 	public Integer getId() {
@@ -129,7 +138,7 @@ public class MarketPrice implements Serializable {
 
 	@Column(name = "PRODUCT_NOTES", length = 1000)
 	@JsonProperty(value = "notes", access = Access.WRITE_ONLY)
-	@Size(max=1000)
+	@Size(max = 1000)
 	public String getNotes() {
 		return notes;
 	}
