@@ -15,8 +15,8 @@ import com.pricer.batch.pricing.tasks.PriceDetailsCacheLoaderWorker;
 import com.pricer.model.EventType;
 import com.pricer.model.JSONResponse;
 import com.pricer.model.SchedulerResponse;
-import com.pricer.service.PriceDetailsCacheLoaderService;
 import com.pricer.service.impl.PriceCalculatorEventLogService;
+import com.pricer.service.impl.PriceDetailsCacheLoaderService;
 
 @Component
 public class PricingCalculatorScheduler implements CommandLineRunner{

@@ -87,7 +87,7 @@ public class PriceCalculatorEventLogService
 
 	public void updateEventLogOnCompletion(PriceCalculatorEventLog eventLog, Integer chunkStartPosition,
 			Integer chunkEndPosition) {
-		eventLog.setRestartPosition(chunkEndPosition);
+		eventLog.setRestartPosition(chunkEndPosition + 1 );
 		if (chunkEndPosition >= eventLog.getEndPosition()) {
 			eventLog.setStatus(JobStatus.COMPLETED);
 		}

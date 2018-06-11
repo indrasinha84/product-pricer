@@ -2,7 +2,7 @@ package com.pricer.batch.pricing.tasks;
 
 import org.springframework.stereotype.Component;
 
-import com.pricer.service.PriceDetailsCacheLoaderService;
+import com.pricer.service.impl.PriceDetailsCacheLoaderService;
 
 @Component
 public class PriceDetailsCacheLoaderWorker implements Runnable {

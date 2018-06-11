@@ -1,7 +1,6 @@
 package com.pricer.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,8 +21,8 @@ public class SchedulingController {
 	@Autowired
 	PriceCalculatorEventLogService priceCalculatorEventLogService;
 
-	@PostMapping(path = "/pricecalculator", consumes = MediaType.ALL_VALUE)
-	public @ResponseBody JSONResponse<SchedulerResponse> priceCalculator(@RequestParam String command) {
+	@PostMapping(path = "/pricecalculator")
+	public @ResponseBody JSONResponse<SchedulerResponse> priceCalculator(@RequestParam("command") String command) {
 		try {
 			if (Command.START.value().equals(command))
 				return priceCalculatorEventLogService.createEvent(EventType.ADHOC);

@@ -67,14 +67,18 @@ public class PriceCalculationJobManagerServiceImpl implements JobManagerService 
 
 	private void createChunkedEvents(PriceCalculatorEventLog log) throws InterruptedException {
 
-		int logStart = log.getStartPosition();
-		int logEnd = log.getStartPosition();
-		int totalChunks = ((logEnd - logStart + 1) / chunkSize) + 1;
-		int chunkStart = log.getStartPosition();
+		int logStart = log.getRestartPosition() == null ? log.getStartPosition() : log.getRestartPosition();
+		int logEnd = log.getEndPosition();
+		int totalItems = logEnd - logStart + 1;
+		int totalChunks = (totalItems / chunkSize) + 
+				((totalItems % chunkSize) > 0 ? 1 : 0);
+		int chunkStart = logStart;
 		int chunkEnd = (chunkStart + chunkSize - 1) >= logEnd ? logEnd : chunkStart + chunkSize - 1;
 		for (int i = 0; i < totalChunks; i++) {
 			try {
 				readerQueue.put(new PriceCalculationReader(priceCalculationReaderService, log, chunkStart, chunkEnd));
+				chunkStart = chunkEnd + 1;
+				chunkEnd = (chunkStart + chunkSize - 1) >= logEnd ? logEnd : chunkStart + chunkSize - 1;
 			} catch (InterruptedException e) {
 				LOGGER.error("Failed while event logging into queue.", e);
 				throw e;

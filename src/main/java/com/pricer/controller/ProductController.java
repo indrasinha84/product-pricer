@@ -3,7 +3,6 @@ package com.pricer.controller;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -38,7 +37,6 @@ import com.pricer.service.impl.PriceDetailsCacheService;
 public class ProductController {
 
 	@Autowired
-	@Resource(name = "priceDetailsCacheService")
 	PriceDetailsCacheService priceDetailsService;
 
 	@Autowired

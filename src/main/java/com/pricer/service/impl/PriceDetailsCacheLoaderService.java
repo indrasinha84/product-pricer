@@ -1,4 +1,4 @@
-package com.pricer.service;
+package com.pricer.service.impl;
 
 import java.util.List;
 
@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.pricer.model.PriceDetails;
-import com.pricer.service.impl.PriceDetailsCacheService;
-import com.pricer.service.impl.PriceDetailsService;
 
 @Service
 public class PriceDetailsCacheLoaderService {

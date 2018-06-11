@@ -48,16 +48,26 @@ public class PriceDetails implements Serializable {
 		
 	}
 	
-	public PriceDetails(Product product, Double averageStorePrice, Double lowestPrice, Double highestPrice,
+	public PriceDetails(Integer productId, Double averageStorePrice, Double lowestPrice, Double highestPrice,
 			Double idealPrice, Integer countOfPrices) {
 		super();
-		this.product = product;
+		this.setProductId(productId);
 		this.averageStorePrice = averageStorePrice;
 		this.lowestPrice = lowestPrice;
 		this.highestPrice = highestPrice;
 		this.idealPrice = idealPrice;
 		this.countOfPrices = countOfPrices;
 	}
+
+	public PriceDetails(Product product, Double averageStorePrice, Double lowestPrice, Double highestPrice,
+			Double idealPrice, Integer countOfPrices) {
+		super();
+		this.setProduct(product);
+		this.averageStorePrice = averageStorePrice;
+		this.lowestPrice = lowestPrice;
+		this.highestPrice = highestPrice;
+		this.idealPrice = idealPrice;
+		this.countOfPrices = countOfPrices;	}
 
 	private Integer id;
 	private Product product;
