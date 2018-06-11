@@ -10,8 +10,12 @@ public class PriceDetailsCacheLoaderWorker implements Runnable {
 
 	@Autowired
 	PriceDetailsCacheLoaderService priceDetailsCacheLoaderService;
+	
+	public PriceDetailsCacheLoaderWorker() {
+		
+	}
 
-	public PriceDetailsCacheLoaderWorker(PriceDetailsCacheLoaderService priceDetailsCacheLoaderService) {
+	private PriceDetailsCacheLoaderWorker(PriceDetailsCacheLoaderService priceDetailsCacheLoaderService) {
 		super();
 		this.priceDetailsCacheLoaderService = priceDetailsCacheLoaderService;
 	}

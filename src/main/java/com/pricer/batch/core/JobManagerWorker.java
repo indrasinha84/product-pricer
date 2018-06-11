@@ -4,7 +4,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class JobManagerWorker implements Runnable {
 
-	public JobManagerWorker(JobManager jobManager) {
+	public JobManagerWorker() {
+		
+	}
+	
+	private JobManagerWorker(JobManager jobManager) {
 		super();
 		this.jobManager = jobManager;
 	}
