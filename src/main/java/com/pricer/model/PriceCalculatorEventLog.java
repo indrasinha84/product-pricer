@@ -44,9 +44,10 @@ public class PriceCalculatorEventLog implements Serializable {
 	public PriceCalculatorEventLog() {
 	}
 
-	public PriceCalculatorEventLog(Integer startPosition, Integer endPosition, Date requestedDate, Date startDate,
+	public PriceCalculatorEventLog(Integer id, Integer startPosition, Integer endPosition, Date requestedDate, Date startDate,
 			Date endDate, JobStatus status, Integer restartPosition, EventType eventType) {
 		super();
+		this.id = id;
 		this.startPosition = startPosition;
 		this.endPosition = endPosition;
 		this.requestedDate = requestedDate;

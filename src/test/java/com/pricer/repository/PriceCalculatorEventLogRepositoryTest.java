@@ -43,7 +43,7 @@ public class PriceCalculatorEventLogRepositoryTest {
 
 	@Test
 	public final void testSavePriceCalculatorEventLog() {
-		PriceCalculatorEventLog ent = new PriceCalculatorEventLog(1, 1, new Date(), null, null, JobStatus.REQUESTED,
+		PriceCalculatorEventLog ent = new PriceCalculatorEventLog(1, 1, 1, new Date(), null, null, JobStatus.REQUESTED,
 				null, EventType.ADHOC);
 		final PriceCalculatorEventLog log = repository.save(ent);
 		assertNotNull(log);
