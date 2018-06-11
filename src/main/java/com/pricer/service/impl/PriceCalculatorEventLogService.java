@@ -94,10 +94,8 @@ public class PriceCalculatorEventLogService
 		repository.save(eventLog);
 	}
 
-	public void updateEventLogOnFailure(PriceCalculatorEventLog eventLog, Integer chunkStartPosition,
-			Integer chunkEndPosition) {
-		eventLog.setStatus(JobStatus.FAILED);
+	public void updateEventLogStatus(PriceCalculatorEventLog eventLog, JobStatus jobStatus) {
+		eventLog.setStatus(jobStatus);
 		repository.save(eventLog);
 	}
-
 }

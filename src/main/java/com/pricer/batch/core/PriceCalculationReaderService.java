@@ -52,7 +52,8 @@ public class PriceCalculationReaderService implements BatchReaderService<PriceCa
 	@Autowired
 	ProductService productService;
 
-	public List<Product> read(Integer chunkStartPosition, Integer chunkEndPosition) {
+	public List<Product> read(PriceCalculatorEventLog eventLog, Integer chunkStartPosition, Integer chunkEndPosition) {
+		jobManager.markStarted(eventLog);
 		return productService.getProductsForPriceCalculation(chunkStartPosition, chunkEndPosition);
 	}
 
@@ -80,7 +81,7 @@ public class PriceCalculationReaderService implements BatchReaderService<PriceCa
 					batchSuccess = batchSuccess & future.get();
 				} catch (InterruptedException e) {
 					LOGGER.error("Fatal error", e);
-					jobManager.markFailure(eventLog, chunkStartPosition, chunkEndPosition);
+					jobManager.markFailure(eventLog);
 				} catch (ExecutionException e) {
 					LOGGER.error("Fatal error", e.getCause());
 					batchSuccess = false;
@@ -92,7 +93,7 @@ public class PriceCalculationReaderService implements BatchReaderService<PriceCa
 				jobManager.markComplete(eventLog, chunkStartPosition, chunkEndPosition);
 			} else {
 				LOGGER.error("Execution Failed.");
-				jobManager.markFailure(eventLog, chunkStartPosition, chunkEndPosition);
+				jobManager.markFailure(eventLog);
 
 			}
 		} else {

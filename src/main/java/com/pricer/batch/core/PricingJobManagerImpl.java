@@ -10,8 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.pricer.model.JobStatus;
 import com.pricer.model.PriceCalculatorEventLog;
 import com.pricer.model.Product;
 import com.pricer.service.impl.PriceCalculatorEventLogService;
@@ -44,18 +46,38 @@ public class PricingJobManagerImpl implements JobManager {
 		loadQueueOnStartup();
 	}
 
-	// TODO Add chunk processing.
+	@Value("${com.pricer.properties.pricing.batch.chunk_size}")
+	int chunkSize;
+
 	private void loadQueueOnStartup() {
 		List<PriceCalculatorEventLog> log = eventLogService.getPendingTheadsInOrder();
 		readerQueue = new LinkedBlockingQueue<>();
 		log.stream().forEach(p -> {
 			try {
-				readerQueue.put(new PriceCalculationReader(priceCalculationReaderService, p, p.getStartPosition(),
-						p.getEndPosition()));
+				createChunkedEvents(p);
 			} catch (InterruptedException e) {
-				LOGGER.error("Failed on batch startup.", e);
+				LOGGER.error("Failed while event logging on startup.", e);
+				e.printStackTrace();
 			}
 		});
+	}
+
+	private void createChunkedEvents(PriceCalculatorEventLog log) throws InterruptedException {
+
+		int logStart = log.getStartPosition();
+		int logEnd = log.getStartPosition();
+		int totalChunks = ((logEnd - logStart + 1) / chunkSize) + 1;
+		int chunkStart = log.getStartPosition();
+		int chunkEnd = (chunkStart + chunkSize - 1) >= logEnd ? logEnd : chunkStart + chunkSize - 1;
+		for (int i = 0; i < totalChunks; i++) {
+			try {
+				readerQueue.put(new PriceCalculationReader(priceCalculationReaderService, log, chunkStart, chunkEnd));
+			} catch (InterruptedException e) {
+				LOGGER.error("Failed while event logging into queue.", e);
+				throw e;
+			}
+		}
+
 	}
 
 	public void startReader() {
@@ -74,14 +96,8 @@ public class PricingJobManagerImpl implements JobManager {
 		}
 	}
 
-	public void publishEventToQueue(PriceCalculatorEventLog p) {
-		try {
-			readerQueue.put(new PriceCalculationReader(priceCalculationReaderService, p, p.getStartPosition(),
-					p.getEndPosition()));
-		} catch (InterruptedException e) {
-			LOGGER.error("Failed on event logging into queue.", e);
-		}
-
+	public void publishEventToQueue(PriceCalculatorEventLog log) throws InterruptedException {
+		createChunkedEvents(log);
 	}
 
 	public void markComplete(PriceCalculatorEventLog eventLog, Integer chunkStartPosition, Integer chunkEndPosition) {
@@ -97,16 +113,26 @@ public class PricingJobManagerImpl implements JobManager {
 		}
 	}
 
-	public void markFailure(PriceCalculatorEventLog eventLog, Integer chunkStartPosition, Integer chunkEndPosition) {
+	public void markFailure(PriceCalculatorEventLog eventLog) {
 		try {
 			lock.lock();
-			eventLogService.updateEventLogOnFailure(eventLog, chunkStartPosition, chunkEndPosition);
+			eventLogService.updateEventLogStatus(eventLog, JobStatus.FAILED);
 			batchRunning = false;
 			batchRuningWaitCondition.signal();
 		} catch (Exception e) {
 			LOGGER.error("Fatal error", e);
 		} finally {
 			lock.unlock();
+		}
+	}
+
+	@Override
+	public void markStarted(PriceCalculatorEventLog eventLog) {
+		try {
+			eventLogService.updateEventLogStatus(eventLog, JobStatus.STARTED);
+			batchRunning = true;
+		} catch (Exception e) {
+			LOGGER.error("Fatal error", e);
 		}
 	}
 }

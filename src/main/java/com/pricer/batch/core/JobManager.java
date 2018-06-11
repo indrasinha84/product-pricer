@@ -8,9 +8,12 @@ public interface JobManager  extends InitializingBean{
 
 	public void startReader();
 
-	public void publishEventToQueue(PriceCalculatorEventLog p);
+	public void publishEventToQueue(PriceCalculatorEventLog p) throws Exception;
 
 	public void markComplete(PriceCalculatorEventLog eventLog, Integer chunkStartPosition, Integer chunkEndPosition);
+	
+	public void markStarted(PriceCalculatorEventLog eventLog);
 
-	public void markFailure(PriceCalculatorEventLog eventLog, Integer chunkStartPosition, Integer chunkEndPosition);
+
+	public void markFailure(PriceCalculatorEventLog eventLog);
 }

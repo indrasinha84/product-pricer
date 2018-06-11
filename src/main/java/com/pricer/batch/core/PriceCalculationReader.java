@@ -25,7 +25,7 @@ public class PriceCalculationReader implements Runnable {
 
 	@Override
 	public void run() {
-		List<Product> products = priceCalculationReaderService.read(chunkStartPosition, chunkEndPosition);
+		List<Product> products = priceCalculationReaderService.read(eventLog, chunkStartPosition, chunkEndPosition);
 		priceCalculationReaderService.processAndWrite(eventLog, products, productQueue, chunkStartPosition,
 				chunkEndPosition);
 	}
