@@ -3,11 +3,13 @@ package com.pricer.batch.scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.pricer.batch.core.JobManager;
 import com.pricer.batch.core.JobManagerWorker;
 import com.pricer.batch.core.PriceDetailsCacheLoaderWorker;
 import com.pricer.model.EventType;
@@ -25,7 +27,8 @@ public class PricingCalculatorScheduler implements CommandLineRunner{
 
 	
 	@Autowired
-	JobManagerWorker jobManagerWorker;
+	@Qualifier("defaultPricingJobManager")
+	JobManager jobManager;
 	
 	@Autowired
 	PriceDetailsCacheLoaderWorker priceDetailsCacheLoaderWorker;
@@ -33,7 +36,7 @@ public class PricingCalculatorScheduler implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 
-		(new Thread(jobManagerWorker.getInstance())).start();
+		(new Thread(new JobManagerWorker(jobManager))).start();
 		(new Thread(priceDetailsCacheLoaderWorker.getInstance())).start();
 	}
 	
