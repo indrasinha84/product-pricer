@@ -42,6 +42,16 @@ public class MarketPrice implements Serializable {
 
 	}
 
+	
+	
+	public MarketPrice(Integer store, Integer product, String notes, Double storePrice) {
+		super();
+		this.setStoreId(store);
+		this.setProductId(product);
+		this.notes = notes;
+		this.storePrice = storePrice;
+	}
+
 	/**
 	 * 
 	 */

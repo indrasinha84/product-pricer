@@ -49,6 +49,15 @@ public class Store implements Serializable {
 	private Date createdDate;
     private Set<MarketPrice> storePrice;
 
+    
+    
+    
+	public Store(String name, String description) {
+		super();
+		this.name = name;
+		this.description = description;
+	}
+
 	@Id	
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "STORE_ID_GENERATOR")
 	@GenericGenerator(name = "STORE_ID_GENERATOR", strategy = "com.pricer.model.id.generator.StoreIdGenerator",

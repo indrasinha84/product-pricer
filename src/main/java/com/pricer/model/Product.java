@@ -37,6 +37,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({ "name", "description", "basePrice", "created", "identifier" })
 public class Product implements Serializable {
 
+	
+	
+	public Product(String name, String description, Double basePrice) {
+		super();
+		this.name = name;
+		this.description = description;
+		this.basePrice = basePrice;
+	}
+
 	public Product() {
 	};
 
