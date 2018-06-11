@@ -121,7 +121,7 @@ public class ProductController {
 	public @ResponseBody JSONResponse<PriceDetails> getPriceDetailsForAProduct(@PathVariable Integer product) {
 		JSONResponse<PriceDetails> result;
 		try {
-			result = priceDetailsService.getPriceDetails(product);
+			result = priceDetailsService.getPriceDetailsResponse(product);
 		} catch (ResourceNotFoundException e) {
 			LOGGER.error("Price Details not found. ", e);
 			throw new ResourceNotFoundException("Price Details", "product", product);

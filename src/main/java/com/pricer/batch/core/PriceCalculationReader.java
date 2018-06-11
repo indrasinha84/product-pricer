@@ -20,6 +20,8 @@ import com.pricer.service.impl.PriceDetailsCacheService;
 import com.pricer.service.impl.PriceDetailsService;
 import com.pricer.service.impl.ProductService;
 
+
+//TODO Create Service for this
 public class PriceCalculationReader implements Runnable {
 
 	private PriceCalculatorEventLog eventLog;

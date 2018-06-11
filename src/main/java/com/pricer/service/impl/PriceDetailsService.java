@@ -10,16 +10,14 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.pricer.model.EffectiveStatus;
 import com.pricer.model.JSONResponse;
 import com.pricer.model.PriceDetails;
-import com.pricer.model.RESTMessage;
 import com.pricer.repository.PriceDetailsRepository;
 
-@Service("priceDetailsServiceSoft")
+@Service
 public class PriceDetailsService extends AbstractSoftDataAccessService<PriceDetails, Integer, PriceDetailsRepository> {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(PriceDetailsService.class);
@@ -48,7 +46,7 @@ public class PriceDetailsService extends AbstractSoftDataAccessService<PriceDeta
 	}
 
 	@Transactional
-	public List<JSONResponse<PriceDetails>> addOrReplacePriceDetails(List<PriceDetails> priceDetailsList) {
+	public List<PriceDetails> addOrReplacePriceDetails(List<PriceDetails> priceDetailsList) {
 		try {
 			List<PriceDetails> toInActive = new LinkedList<>();
 			List<PriceDetails> toActive = new LinkedList<>();
@@ -68,15 +66,14 @@ public class PriceDetailsService extends AbstractSoftDataAccessService<PriceDeta
 			});
 			toInActive.addAll(toActive);
 			repository.saveAll(toInActive);
-			List<JSONResponse<PriceDetails>> response = 
-			toActive.stream().map(p -> {
-			PriceDetails l = setNaturalKey(p);
-			setEffectiveStatus(l, EffectiveStatus.ACTIVE);
-			Example<PriceDetails>  e = Example.of(l);
-			Optional<PriceDetails> op = repository.findOne(e);
-			return new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, op.get());
+			List<PriceDetails> response = toActive.stream().map(p -> {
+				PriceDetails l = setNaturalKey(p);
+				setEffectiveStatus(l, EffectiveStatus.ACTIVE);
+				Example<PriceDetails> e = Example.of(l);
+				Optional<PriceDetails> op = repository.findOne(e);
+				return op.get();
 			}).collect(Collectors.toList());
-			
+
 			return response;
 		} catch (Exception e) {
 			LOGGER.error("addOrReplacePriceDetails failed.", e);

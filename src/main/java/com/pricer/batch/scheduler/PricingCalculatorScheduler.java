@@ -3,23 +3,40 @@ package com.pricer.batch.scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.pricer.batch.core.JobManagerWorker;
+import com.pricer.batch.core.PriceDetailsCacheLoaderWorker;
 import com.pricer.model.EventType;
 import com.pricer.model.JSONResponse;
 import com.pricer.model.SchedulerResponse;
 import com.pricer.service.impl.PriceCalculatorEventLogService;
 
 @Component
-public class PricingCalculatorScheduler {
+public class PricingCalculatorScheduler implements CommandLineRunner{
 
 	@Autowired
 	PriceCalculatorEventLogService priceCalculatorEventLogService;
 
 	private static Logger LOGGER = LoggerFactory.getLogger(PricingCalculatorScheduler.class);
 
+	
+	@Autowired
+	JobManagerWorker jobManagerWorker;
+	
+	@Autowired
+	PriceDetailsCacheLoaderWorker priceDetailsCacheLoaderWorker;
+
+	@Override
+	public void run(String... args) throws Exception {
+
+		(new Thread(jobManagerWorker.getInstance())).start();
+		(new Thread(priceDetailsCacheLoaderWorker.getInstance())).start();
+	}
+	
 	@Scheduled(fixedRateString = "${com.pricer.properties.pricing.batch.scheduler.frequency}")
 	public void calculatePricesScheduler() {
 		LOGGER.info("Price Calculation Scheduler Timer Triggered");

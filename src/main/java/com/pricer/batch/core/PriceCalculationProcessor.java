@@ -47,7 +47,7 @@ public class PriceCalculationProcessor implements Callable<Boolean> {
 				product = productQueue.poll();
 			}
 			if (caculatedPrices.size() != 0) {
-				List<JSONResponse<PriceDetails>> priceList = priceDetailsService.addOrReplacePriceDetails(caculatedPrices);
+				List<PriceDetails> priceList = priceDetailsService.addOrReplacePriceDetails(caculatedPrices);
 				putCache(priceList);
 
 			}
@@ -62,8 +62,8 @@ public class PriceCalculationProcessor implements Callable<Boolean> {
 		}
 	}
 
-	private void putCache(List<JSONResponse<PriceDetails>> caculatedPrices) {
-		caculatedPrices.stream().forEach(p -> priceDetailsCacheService.putPriceDetails( p.getPayload().getProductId(), p));
+	private void putCache(List<PriceDetails> caculatedPrices) {
+		caculatedPrices.stream().forEach(p -> priceDetailsCacheService.putPriceDetails( p.getProductId(), p));
 	}
 
 }
