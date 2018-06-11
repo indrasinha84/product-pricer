@@ -1,6 +1,11 @@
 package com.pricer.service.impl;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,12 +20,17 @@ import com.pricer.model.RESTMessage;
 @CacheConfig(cacheNames = "priceDetailsCache")
 public class PriceDetailsCacheService {
 
+	private static Logger LOGGER = LoggerFactory.getLogger(PriceDetailsCacheService.class);
+
 	@Autowired
 	PriceDetailsService priceDetailsService;
 
 	@Autowired
 	PriceDetailsCacheService priceDetailsCacheService;
 
+	@Value("${com.pricer.properties.pricing.load.cache.on.startup}")
+	boolean loadCacheOnStartUp;
+	
 	@Cacheable(key = "#product")
 	public PriceDetails getPriceDetails(Integer product) {
 		return priceDetailsService.getPriceDetails(product).getPayload();
@@ -36,4 +46,16 @@ public class PriceDetailsCacheService {
 		JSONResponse<PriceDetails> response = new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, priceDetails);
 		return response;
 	}
+	
+	public void createCache() {
+		if (loadCacheOnStartUp) {
+			LOGGER.info("Price Loading Cache loading started.");
+			List<PriceDetails> caculatedPrices = priceDetailsService.listEntities().getPayload();
+			caculatedPrices.stream().forEach(p -> priceDetailsCacheService.putPriceDetails(p.getProductId(), p));
+			LOGGER.info("Price Loading Cache loading completed.");
+		} else {
+			LOGGER.info("Price Loading Cache skipped Flag: {}", loadCacheOnStartUp);
+		}
+	}
+	
 }

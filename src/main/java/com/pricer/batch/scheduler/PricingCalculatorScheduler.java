@@ -16,7 +16,7 @@ import com.pricer.model.EventType;
 import com.pricer.model.JSONResponse;
 import com.pricer.model.SchedulerResponse;
 import com.pricer.service.impl.PriceCalculatorEventLogService;
-import com.pricer.service.impl.PriceDetailsCacheLoaderService;
+import com.pricer.service.impl.PriceDetailsCacheService;
 
 @Component
 public class PricingCalculatorScheduler implements CommandLineRunner{
@@ -26,7 +26,7 @@ public class PricingCalculatorScheduler implements CommandLineRunner{
 
 	
 	@Autowired
-	PriceDetailsCacheLoaderService priceDetailsCacheLoaderService;
+	PriceDetailsCacheService priceDetailsCacheService;
 	
 	private static Logger LOGGER = LoggerFactory.getLogger(PricingCalculatorScheduler.class);
 
@@ -39,7 +39,7 @@ public class PricingCalculatorScheduler implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 
 		(new Thread(new PriceCalculationJobManager(jobManager))).start();
-		(new Thread(new PriceDetailsCacheLoaderWorker(priceDetailsCacheLoaderService))).start();
+		(new Thread(new PriceDetailsCacheLoaderWorker(priceDetailsCacheService))).start();
 	}
 	
 	@Scheduled(fixedRateString = "${com.pricer.properties.pricing.batch.scheduler.frequency}")

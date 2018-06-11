@@ -2,20 +2,20 @@ package com.pricer.batch.pricing.tasks;
 
 import org.springframework.stereotype.Component;
 
-import com.pricer.service.impl.PriceDetailsCacheLoaderService;
+import com.pricer.service.impl.PriceDetailsCacheService;
 
 @Component
 public class PriceDetailsCacheLoaderWorker implements Runnable {
 
-	PriceDetailsCacheLoaderService priceDetailsCacheLoaderService;
+	PriceDetailsCacheService priceDetailsCacheService;
 
-	public PriceDetailsCacheLoaderWorker(PriceDetailsCacheLoaderService priceDetailsCacheLoaderService) {
+	public PriceDetailsCacheLoaderWorker(PriceDetailsCacheService priceDetailsCacheService) {
 		super();
-		this.priceDetailsCacheLoaderService = priceDetailsCacheLoaderService;
+		this.priceDetailsCacheService = priceDetailsCacheService;
 	}
 
 	@Override
 	public void run() {
-		priceDetailsCacheLoaderService.createCache();
+		priceDetailsCacheService.createCache();
 	}
 }
