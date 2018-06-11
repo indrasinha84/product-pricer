@@ -7,7 +7,7 @@ import com.pricer.batch.core.ChunkManagerService;
 import com.pricer.model.PriceCalculatorEventLog;
 import com.pricer.model.Product;
 
-public class PriceCalculationReader implements Runnable {
+public class PriceCalculationChunkManager implements Runnable {
 
 	private PriceCalculatorEventLog eventLog;
 	private Integer chunkStartPosition;
@@ -15,7 +15,7 @@ public class PriceCalculationReader implements Runnable {
 	private Queue<Product> productQueue;
 	ChunkManagerService<PriceCalculatorEventLog, Product> priceCalculationReaderService; 
 
-	public PriceCalculationReader(ChunkManagerService<PriceCalculatorEventLog, Product> priceCalculationReaderService,
+	public PriceCalculationChunkManager(ChunkManagerService<PriceCalculatorEventLog, Product> priceCalculationReaderService,
 			PriceCalculatorEventLog eventLog, Integer chunkStartPosition, Integer chunkEndPosition) {
 		super();
 		this.priceCalculationReaderService = priceCalculationReaderService;

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.pricer.batch.core.ChunkManagerService;
 import com.pricer.batch.core.JobManagerService;
-import com.pricer.batch.pricing.tasks.PriceCalculationReader;
+import com.pricer.batch.pricing.tasks.PriceCalculationChunkManager;
 import com.pricer.model.JobStatus;
 import com.pricer.model.PriceCalculatorEventLog;
 import com.pricer.model.Product;
@@ -25,7 +25,7 @@ import com.pricer.service.impl.ProductService;
 @Service("defaultPricingJobManager")
 public class PriceCalculationJobManagerServiceImpl implements JobManagerService {
 
-	private BlockingQueue<PriceCalculationReader> readerQueue;
+	private BlockingQueue<PriceCalculationChunkManager> readerQueue;
 
 	private volatile boolean batchRunning = false;
 
@@ -76,7 +76,7 @@ public class PriceCalculationJobManagerServiceImpl implements JobManagerService 
 		int chunkEnd = (chunkStart + chunkSize - 1) >= logEnd ? logEnd : chunkStart + chunkSize - 1;
 		for (int i = 0; i < totalChunks; i++) {
 			try {
-				readerQueue.put(new PriceCalculationReader(priceCalculationReaderService, log, chunkStart, chunkEnd));
+				readerQueue.put(new PriceCalculationChunkManager(priceCalculationReaderService, log, chunkStart, chunkEnd));
 				chunkStart = chunkEnd + 1;
 				chunkEnd = (chunkStart + chunkSize - 1) >= logEnd ? logEnd : chunkStart + chunkSize - 1;
 			} catch (InterruptedException e) {
@@ -90,7 +90,7 @@ public class PriceCalculationJobManagerServiceImpl implements JobManagerService 
 	public void startReader() {
 		try {
 			lock.lock();
-			PriceCalculationReader reader = readerQueue.take();
+			PriceCalculationChunkManager reader = readerQueue.take();
 			while (batchRunning) {
 				batchRuningWaitCondition.await();
 			}
