@@ -91,5 +91,14 @@ CREATE UNIQUE INDEX ind1_price_calculation_request
 
 CREATE INDEX ind2_price_calculation_request 
   ON price_calculation_request (job_sts, store_price_id_end); 
+  
+INSERT INTO store (store_id, store_name, store_description, created_date)
+VALUES (next value for seq_store, 'Test Store', 'Test Store Description', CURRENT_TIMESTAMP);  
+  
+INSERT INTO product (product_id, product_name, product_description, base_price, created_date)
+VALUES(next value for seq_product,'Test Product','Test Product Description',50000, TIMESTAMP '2018-06-10 23:34:58.957');
+
+INSERT INTO store_price (store_price_id, store_id, product_id, product_notes, store_price, eff_sts, created_date)
+VALUES ( next value for seq_store_price, 1, 1, 'Test Market Price', 30000, 'ACTIVE', CURRENT_TIMESTAMP );
 
 COMMIT; 
