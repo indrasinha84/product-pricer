@@ -1,4 +1,4 @@
-package com.pricer.batch.core;
+package com.pricer.batch.pricing.impl;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.pricer.batch.core.BatchReaderService;
+import com.pricer.batch.core.JobManagerService;
+import com.pricer.batch.pricing.tasks.PriceCalculationReader;
 import com.pricer.model.JobStatus;
 import com.pricer.model.PriceCalculatorEventLog;
 import com.pricer.model.Product;
@@ -20,7 +23,7 @@ import com.pricer.service.impl.PriceCalculatorEventLogService;
 import com.pricer.service.impl.ProductService;
 
 @Service("defaultPricingJobManager")
-public class PricingJobManagerImpl implements JobManager {
+public class PriceCalculationJobManagerServiceImpl implements JobManagerService {
 
 	private BlockingQueue<PriceCalculationReader> readerQueue;
 
@@ -39,7 +42,7 @@ public class PricingJobManagerImpl implements JobManager {
 	final ReentrantLock lock = new ReentrantLock();
 	Condition batchRuningWaitCondition = lock.newCondition();
 
-	private static Logger LOGGER = LoggerFactory.getLogger(PricingJobManagerImpl.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(PriceCalculationJobManagerServiceImpl.class);
 
 	@Override
 	public void afterPropertiesSet() throws Exception {

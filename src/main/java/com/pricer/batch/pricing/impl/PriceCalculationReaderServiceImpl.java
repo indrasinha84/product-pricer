@@ -1,4 +1,4 @@
-package com.pricer.batch.core;
+package com.pricer.batch.pricing.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +17,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.pricer.batch.core.BatchProcessorService;
+import com.pricer.batch.core.BatchReaderService;
+import com.pricer.batch.core.JobManagerService;
+import com.pricer.batch.pricing.tasks.PriceCalculationJobManager;
+import com.pricer.batch.pricing.tasks.PriceCalculationProcessor;
 import com.pricer.model.PriceCalculatorEventLog;
 import com.pricer.model.Product;
 import com.pricer.pricing.rule.calculator.PricingCalculator;
@@ -25,13 +30,13 @@ import com.pricer.service.impl.PriceDetailsService;
 import com.pricer.service.impl.ProductService;
 
 @Component("priceCalculationReaderService")
-public class PriceCalculationReaderService implements BatchReaderService<PriceCalculatorEventLog, Product> {
+public class PriceCalculationReaderServiceImpl implements BatchReaderService<PriceCalculatorEventLog, Product> {
 
-	private static Logger LOGGER = LoggerFactory.getLogger(PriceCalculationReaderService.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(PriceCalculationReaderServiceImpl.class);
 
 	@Autowired
 	@Qualifier("defaultPricingJobManager")
-	JobManager jobManager;
+	JobManagerService jobManager;
 	
 	@Autowired
 	@Qualifier("priceCalculationProcessorService")
@@ -101,6 +106,6 @@ public class PriceCalculationReaderService implements BatchReaderService<PriceCa
 
 			jobManager.markComplete(eventLog, chunkStartPosition, chunkEndPosition);
 		}
-		(new Thread(new JobManagerWorker(jobManager))).start();
+		(new Thread(new PriceCalculationJobManager(jobManager))).start();
 	}
 }

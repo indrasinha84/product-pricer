@@ -4,7 +4,7 @@ import org.springframework.beans.factory.InitializingBean;
 
 import com.pricer.model.PriceCalculatorEventLog;
 
-public interface JobManager  extends InitializingBean{
+public interface JobManagerService  extends InitializingBean{
 
 	public void startReader();
 

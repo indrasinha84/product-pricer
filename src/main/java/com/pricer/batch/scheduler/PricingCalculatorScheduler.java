@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.pricer.batch.core.JobManager;
-import com.pricer.batch.core.JobManagerWorker;
-import com.pricer.batch.core.PriceDetailsCacheLoaderWorker;
+import com.pricer.batch.core.JobManagerService;
+import com.pricer.batch.pricing.tasks.PriceCalculationJobManager;
+import com.pricer.batch.pricing.tasks.PriceDetailsCacheLoaderWorker;
 import com.pricer.model.EventType;
 import com.pricer.model.JSONResponse;
 import com.pricer.model.SchedulerResponse;
@@ -28,7 +28,7 @@ public class PricingCalculatorScheduler implements CommandLineRunner{
 	
 	@Autowired
 	@Qualifier("defaultPricingJobManager")
-	JobManager jobManager;
+	JobManagerService jobManager;
 	
 	@Autowired
 	PriceDetailsCacheLoaderWorker priceDetailsCacheLoaderWorker;
@@ -36,7 +36,7 @@ public class PricingCalculatorScheduler implements CommandLineRunner{
 	@Override
 	public void run(String... args) throws Exception {
 
-		(new Thread(new JobManagerWorker(jobManager))).start();
+		(new Thread(new PriceCalculationJobManager(jobManager))).start();
 		(new Thread(priceDetailsCacheLoaderWorker.getInstance())).start();
 	}
 	

@@ -1,4 +1,4 @@
-package com.pricer.batch.core;
+package com.pricer.batch.pricing.tasks;
 
 import java.util.Queue;
 import java.util.concurrent.Callable;
@@ -7,6 +7,7 @@ import java.util.concurrent.CountDownLatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.pricer.batch.core.BatchProcessorService;
 import com.pricer.model.Product;
 
 public class PriceCalculationProcessor implements Callable<Boolean> {

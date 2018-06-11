@@ -1,8 +1,9 @@
-package com.pricer.batch.core;
+package com.pricer.batch.pricing.tasks;
 
 import java.util.List;
 import java.util.Queue;
 
+import com.pricer.batch.core.BatchReaderService;
 import com.pricer.model.PriceCalculatorEventLog;
 import com.pricer.model.Product;
 

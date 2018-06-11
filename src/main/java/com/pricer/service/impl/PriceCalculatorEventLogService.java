@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.pricer.batch.core.JobManager;
+import com.pricer.batch.core.JobManagerService;
 import com.pricer.model.EventType;
 import com.pricer.model.JSONResponse;
 import com.pricer.model.JobStatus;
@@ -29,7 +29,7 @@ public class PriceCalculatorEventLogService
 
 	@Autowired
 	@Qualifier("defaultPricingJobManager")
-	JobManager jobManager;
+	JobManagerService jobManager;
 
 	@Autowired
 	MarketPriceRepository marketPriceRepository;

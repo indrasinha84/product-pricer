@@ -1,4 +1,4 @@
-package com.pricer.batch.core;
+package com.pricer.batch.pricing.impl;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pricer.batch.core.BatchProcessorService;
 import com.pricer.model.PriceDetails;
 import com.pricer.model.Product;
 import com.pricer.pricing.rule.calculator.PricingCalculator;
@@ -16,7 +17,7 @@ import com.pricer.service.impl.PriceDetailsCacheService;
 import com.pricer.service.impl.PriceDetailsService;
 
 @Service("priceCalculationProcessorService")
-public class PriceCalculationProcessorService implements BatchProcessorService<Product> {	
+public class PriceCalculationProcessorServiceImpl implements BatchProcessorService<Product> {	
 	
 	@Autowired
 	private PriceDetailsService priceDetailsService;
@@ -27,7 +28,7 @@ public class PriceCalculationProcessorService implements BatchProcessorService<P
 	@Autowired
 	PriceDetailsCacheService priceDetailsCacheService;
 
-	private static Logger LOGGER = LoggerFactory.getLogger(PriceCalculationProcessorService.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(PriceCalculationProcessorServiceImpl.class);
 
 	@Override
 	public boolean process(Queue<Product> productQueue) throws Exception {

@@ -1,4 +1,4 @@
-package com.pricer.batch.core;
+package com.pricer.batch.pricing.tasks;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
