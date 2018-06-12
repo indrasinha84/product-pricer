@@ -2,7 +2,6 @@ package com.pricer.service.impl;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.pricer.model.JSONResponse;
-import com.pricer.model.MarketPrice;
 import com.pricer.model.MarketPrice;
 import com.pricer.repository.MarketPriceRepository;
 
