@@ -26,7 +26,7 @@ public class PriceCalculationProcessorServiceImpl implements BatchProcessorServi
 	private PricingCalculator pricingCalculator;
 	
 	@Autowired
-	PriceDetailsCacheService priceDetailsCacheService;
+	private PriceDetailsCacheService priceDetailsCacheService;
 
 	private static Logger LOGGER = LoggerFactory.getLogger(PriceCalculationProcessorServiceImpl.class);
 
