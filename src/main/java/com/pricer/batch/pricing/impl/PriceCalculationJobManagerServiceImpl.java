@@ -3,7 +3,7 @@ package com.pricer.batch.pricing.impl;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.locks.Condition;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.slf4j.Logger;
@@ -27,34 +27,34 @@ public class PriceCalculationJobManagerServiceImpl implements JobManagerService 
 
 	private BlockingQueue<PriceCalculationChunkManager> readerQueue;
 
-	private volatile boolean batchRunning = false;
+	public BlockingQueue<PriceCalculationChunkManager> getReaderQueue() {
+		return readerQueue;
+	}
 
 	@Autowired
 	PriceCalculatorEventLogService eventLogService;
 
 	@Autowired
 	ProductService productService;
-
+	
 	@Autowired
 	@Qualifier("priceCalculationReaderService")
 	ChunkManagerService<PriceCalculatorEventLog, Product> priceCalculationReaderService;
 
 	final ReentrantLock lock = new ReentrantLock();
-	Condition batchRuningWaitCondition = lock.newCondition();
-
+	
 	private static Logger LOGGER = LoggerFactory.getLogger(PriceCalculationJobManagerServiceImpl.class);
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		loadQueueOnStartup();
-	}
-
-	@Value("${com.pricer.properties.pricing.batch.chunk_size}")
+	@Value("${com.pricer.properties.pricing.batch.reader.chunk.size}")
 	int chunkSize;
 
-	private void loadQueueOnStartup() {
+	@Value("${com.pricer.properties.pricing.batch.reader.threads.pool}")
+	private Integer readerPoolSize;
+	
+	private Semaphore processorSemaphore;
+
+	public void loadPoolOnStartup() {
 		List<PriceCalculatorEventLog> log = eventLogService.getPendingTheadsInOrder();
-		readerQueue = new LinkedBlockingQueue<>();
 		log.stream().forEach(p -> {
 			try {
 				createChunkedEvents(p);
@@ -70,40 +70,23 @@ public class PriceCalculationJobManagerServiceImpl implements JobManagerService 
 		int logStart = log.getRestartPosition() == null ? log.getStartPosition() : log.getRestartPosition();
 		int logEnd = log.getEndPosition();
 		int totalItems = logEnd - logStart + 1;
-		int totalChunks = (totalItems / chunkSize) + 
-				((totalItems % chunkSize) > 0 ? 1 : 0);
+		int totalChunks = (totalItems / chunkSize) + ((totalItems % chunkSize) > 0 ? 1 : 0);
 		int chunkStart = logStart;
 		int chunkEnd = (chunkStart + chunkSize - 1) >= logEnd ? logEnd : chunkStart + chunkSize - 1;
 		for (int i = 0; i < totalChunks; i++) {
-			try {
-				readerQueue.put(new PriceCalculationChunkManager(priceCalculationReaderService, log, chunkStart, chunkEnd));
-				chunkStart = chunkEnd + 1;
-				chunkEnd = (chunkStart + chunkSize - 1) >= logEnd ? logEnd : chunkStart + chunkSize - 1;
-			} catch (InterruptedException e) {
-				LOGGER.error("Failed while event logging into queue.", e);
-				throw e;
-			}
+			readerQueue.put(new PriceCalculationChunkManager(priceCalculationReaderService, log, chunkStart, chunkEnd,
+					processorSemaphore));
+			chunkStart = chunkEnd + 1;
+			chunkEnd = (chunkStart + chunkSize - 1) >= logEnd ? logEnd : chunkStart + chunkSize - 1;
 		}
 
 	}
-
-	public void startReader() {
-		try {
-			lock.lock();
-			PriceCalculationChunkManager reader = readerQueue.take();
-			while (batchRunning) {
-				batchRuningWaitCondition.await();
-			}
-			new Thread(reader).start();
-			batchRunning = true;
-		} catch (InterruptedException e) {
-			LOGGER.error("Failed on statring reader.", e);
-		} finally {
-			lock.unlock();
-		}
+	
+	public Integer getReaderPoolSize() {
+		return readerPoolSize;
 	}
 
-	public void publishEventToQueue(PriceCalculatorEventLog log) throws InterruptedException {
+	public void publishEvent(PriceCalculatorEventLog log) throws InterruptedException {
 		createChunkedEvents(log);
 	}
 
@@ -111,8 +94,6 @@ public class PriceCalculationJobManagerServiceImpl implements JobManagerService 
 		try {
 			lock.lock();
 			eventLogService.updateEventLogOnCompletion(eventLog, chunkStartPosition, chunkEndPosition);
-			batchRunning = false;
-			batchRuningWaitCondition.signal();
 		} catch (Exception e) {
 			LOGGER.error("Fatal error", e);
 		} finally {
@@ -124,8 +105,6 @@ public class PriceCalculationJobManagerServiceImpl implements JobManagerService 
 		try {
 			lock.lock();
 			eventLogService.updateEventLogStatus(eventLog, JobStatus.FAILED);
-			batchRunning = false;
-			batchRuningWaitCondition.signal();
 		} catch (Exception e) {
 			LOGGER.error("Fatal error", e);
 		} finally {
@@ -137,9 +116,18 @@ public class PriceCalculationJobManagerServiceImpl implements JobManagerService 
 	public void markStarted(PriceCalculatorEventLog eventLog) {
 		try {
 			eventLogService.updateEventLogStatus(eventLog, JobStatus.STARTED);
-			batchRunning = true;
 		} catch (Exception e) {
 			LOGGER.error("Fatal error", e);
 		}
 	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		readerQueue = new LinkedBlockingQueue<>();
+		processorSemaphore = new Semaphore(1);
+		loadPoolOnStartup();
+
+		
+	}
+
 }

@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 import com.pricer.batch.core.BatchProcessorService;
 import com.pricer.batch.core.ChunkManagerService;
 import com.pricer.batch.core.JobManagerService;
-import com.pricer.batch.pricing.tasks.PriceCalculationJobManager;
 import com.pricer.batch.pricing.tasks.PriceCalculationProcessor;
 import com.pricer.model.PriceCalculatorEventLog;
 import com.pricer.model.Product;
@@ -37,7 +36,7 @@ public class PriceCalculationChunkManagerServiceImpl implements ChunkManagerServ
 	@Autowired
 	@Qualifier("defaultPricingJobManager")
 	JobManagerService jobManager;
-	
+
 	@Autowired
 	@Qualifier("priceCalculationProcessorService")
 	BatchProcessorService<Product> priceCalculationProcessorService;
@@ -106,6 +105,5 @@ public class PriceCalculationChunkManagerServiceImpl implements ChunkManagerServ
 
 			jobManager.markComplete(eventLog, chunkStartPosition, chunkEndPosition);
 		}
-		(new Thread(new PriceCalculationJobManager(jobManager))).start();
 	}
 }

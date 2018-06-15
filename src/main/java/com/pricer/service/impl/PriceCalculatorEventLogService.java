@@ -2,6 +2,7 @@ package com.pricer.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,7 @@ public class PriceCalculatorEventLogService
 
 	@Autowired
 	MarketPriceRepository marketPriceRepository;
-
+	
 	@Override
 	protected void setKey(PriceCalculatorEventLog request, Integer key) {
 		request.setId(key);
@@ -66,7 +67,7 @@ public class PriceCalculatorEventLogService
 			JSONResponse<PriceCalculatorEventLog> response = addEntity(request);
 			if (response != null && response.getStatus() != null && HttpStatus.OK.value() == response.getStatus()
 					&& response.getPayload() != null && response.getPayload().getRequestedDate() != null) {
-				jobManager.publishEventToQueue(response.getPayload());
+				jobManager.publishEvent(response.getPayload());
 				responseEntity.setJob(response.getPayload().getId().toString());
 				responseEntity.setStarted(response.getPayload().getRequestedDate());
 				return new JSONResponse<>(HttpStatus.OK, RESTMessage.OK, responseEntity);
