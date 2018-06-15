@@ -36,7 +36,6 @@ public class PriceCalculationChunkManager implements Callable<Void> {
 			List<Product> products = priceCalculationReaderService.read(eventLog, chunkStartPosition, chunkEndPosition);
 			processorSemaphore.acquire();
 			Thread.sleep(5000);
-			System.out.println("Chunkkkkkkkkkkkkkkkkkk" + chunkStartPosition +";;;;" + processorSemaphore.availablePermits());
 			priceCalculationReaderService.processAndWrite(eventLog, products, productQueue, chunkStartPosition,
 					chunkEndPosition);
 			processorSemaphore.release();
